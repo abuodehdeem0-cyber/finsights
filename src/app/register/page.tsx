@@ -21,7 +21,7 @@ export default function RegisterPage() {
 
   const { register } = useAuth();
   const router = useRouter();
-  const { t, isRTL } = useLanguage();
+  const { t, isRTL, locale } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +33,7 @@ export default function RegisterPage() {
     setIsLoading(false);
     
     if (result.success) {
-      router.push("/"); // Redirect to dashboard
+      router.push(`/${locale}/dashboard`); // Redirect to dashboard
     } else {
       setError(result.error || "Registration failed. Please try again.");
     }

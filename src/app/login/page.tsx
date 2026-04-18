@@ -23,7 +23,7 @@ function LoginContent() {
   const { login } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t, isRTL } = useLanguage();
+  const { t, isRTL, locale } = useLanguage();
 
   // Check for auth required message from middleware redirect
   useEffect(() => {
@@ -56,7 +56,7 @@ function LoginContent() {
       if (result.success) {
         console.log("[Login] Success, redirecting...");
         const redirect = searchParams.get("redirect");
-        router.push(redirect || "/");
+        router.push(redirect || `/${locale}/dashboard`);
       } else {
         console.log("[Login] Failed:", result.error);
         setShake(true);

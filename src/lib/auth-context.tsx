@@ -129,6 +129,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       
+      // Set cookie on root path '/' which automatically covers ALL subpaths (/en/, /ar/, etc.)
+      const cookieValue = `token=${data.token}; path=/; max-age=${60*60*24*7}; SameSite=Lax`;
+      document.cookie = cookieValue;
+      
       setToken(data.token);
       setUser(data.user);
       
