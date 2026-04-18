@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinSight - Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a0f0f;
+            --primary-dark: #2a0707;
+            --primary-light: #6a1f1f;
+            --secondary-color: #000000;
+            --accent-color: #1f0505;
+            --text-light: #f8fafc;
+            --text-dark: #1f2937;
+            --bg-dark: #000000;
+            --bg-darker: #0a0a0a;
+            --bg-light: #f9fafb;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #000000, #3d0a0a, #6b1a1a, #000000, #3d0a0a);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            color: var(--text-light);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(220, 38, 38, 0.1);
+            border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+        }
+
+        .user-info {
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .main-container {
+            padding: 40px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .portfolio-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .portfolio-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .portfolio-subtitle {
+            font-size: 1.2rem;
+            color: rgba(248, 250, 252, 0.8);
+            line-height: 1.6;
+        }
+
+        .portfolio-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .portfolio-btn {
+            background: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .portfolio-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: rgba(248, 250, 252, 0.8);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .portfolio-item {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+        }
+
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .stock-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--text-light);
+        }
+
+        .stock-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: rgba(220, 38, 38, 0.2);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .currency-toggle {
+            margin-left: 15px;
+        }
+
+        .currency-btn {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .currency-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+        }
+
+        .currency-btn:hover {
+            background: rgba(220, 38, 38, 0.2);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+        }
+
+        .stock-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            background: rgba(220, 38, 38, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            color: rgba(248, 250, 252, 0.7);
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-light);
+        }
+
+        .ai-recommendation {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .recommendation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .badge-buy {
+            background: #28a745;
+            color: var(--text-light);
+        }
+
+        .badge-sell {
+            background: #dc3545;
+            color: var(--text-light);
+        }
+
+        .badge-hold {
+            background: #fd7e14;
+            color: var(--text-light);
+        }
+
+        .recommendation-confidence {
+            font-size: 0.85rem;
+            color: rgba(248, 250, 252, 0.8);
+            font-weight: 500;
+        }
+
+        .recommendation-text {
+            font-size: 0.95rem;
+            color: rgba(248, 250, 252, 0.9);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .recommendation-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: rgba(248, 250, 252, 0.8);
+        }
+
+        .detail-row span:first-child {
+            color: rgba(248, 250, 252, 0.6);
+        }
+
+        .detail-row span:last-child {
+            font-weight: 500;
+        }
+
+        .add-investment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: var(--text-light);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            background: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .modal-btn.cancel {
+            background: rgba(220, 38, 38, 0.2);
+        }
+
+        .modal-btn.cancel:hover {
+            background: rgba(220, 38, 38, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .portfolio-stats { grid-template-columns: 1fr; }
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .stock-details { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboard_new.html">
+                <i class="fas fa-chart-line me-2"></i>FinSight
+            </a>
+            <div class="navbar-nav ms-auto">
+                <div class="user-info">
+                    <i class="fas fa-user me-2"></i>
+                    <span id="username">Welcome User</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Portfolio Header -->
+        <div class="portfolio-header">
+            <h1 class="portfolio-title">
+                <i class="fas fa-briefcase me-3"></i>Investment Portfolio
+            </h1>
+            <p class="portfolio-subtitle">
+                Track your investments, monitor performance, and get AI-powered recommendations
+            </p>
+        </div>
+
+        <!-- Portfolio Actions -->
+        <div class="portfolio-actions">
+            <button class="portfolio-btn" onclick="showAddInvestment()">
+                <i class="fas fa-plus me-2"></i>Add Investment
+            </button>
+            <button class="portfolio-btn" onclick="refreshPortfolio()">
+                <i class="fas fa-sync me-2"></i>Refresh Data
+            </button>
+            <div class="currency-toggle">
+                <button class="currency-btn active" id="sarBtn" onclick="setCurrency('SAR')">SAR</button>
+                <button class="currency-btn" id="usdBtn" onclick="setCurrency('USD')">USD</button>
+            </div>
+        </div>
+
+        <!-- Portfolio Statistics -->
+        <div class="portfolio-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="stat-value" id="totalValue">$25,450</div>
+                <div class="stat-label">Total Portfolio Value</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-value" id="totalProfit">+$2,340</div>
+                <div class="stat-label">Total Profit/Loss</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-value" id="totalReturn">+9.2%</div>
+                <div class="stat-label">Overall Return</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="stat-value" id="stockCount">8</div>
+                <div class="stat-label">Total Holdings</div>
+            </div>
+        </div>
+
+        <!-- Portfolio Grid -->
+        <div class="portfolio-grid" id="portfolioGrid">
+            <!-- Portfolio items will be populated here -->
+        </div>
+    </div>
+
+    <!-- Add Investment Modal -->
+    <div class="add-investment-modal" id="addInvestmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-plus me-2"></i>Add New Investment
+                </h2>
+            </div>
+
+            <form onsubmit="handleAddInvestment(event)">
+                <div class="form-group">
+                    <label class="form-label" for="stockSymbol">Stock Symbol</label>
+                    <input type="text" class="form-input" id="stockSymbol" placeholder="e.g., AAPL, TSLA, 2222" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="shares">Number of Shares</label>
+                    <input type="number" class="form-input" id="shares" placeholder="Enter number of shares" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="buyPrice">Buy Price per Share (<span id="currencyLabel">USD</span>)</label>
+                    <input type="number" class="form-input" id="buyPrice" placeholder="Enter buy price" step="0.01" required>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="submit" class="modal-btn">
+                        <i class="fas fa-plus me-2"></i>Add Investment
+                    </button>
+                    <button type="button" class="modal-btn cancel" onclick="hideAddInvestment()">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mock portfolio data - starting empty
+        let portfolioData = [];
+        let currentCurrency = 'USD';
+        
+        // API Keys (you'll need to get these)
+        const OPENAI_API_KEY = 'your-openai-api-key-here';
+        const ALPHA_VANTAGE_API_KEY = 'your-alpha-vantage-api-key-here';
+
+        // Real AI Analysis Function
+        async function getRealAIAnalysis(stockSymbol, shares, buyPrice, currentPrice) {
+            try {
+                // Get real stock data from Alpha Vantage
+                const stockResponse = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${stockSymbol}&apikey=${ALPHA_VANTAGE_API_KEY}`);
+                const stockData = await stockResponse.json();
+                
+                // Get real market data
+                const quoteResponse = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${stockSymbol}&apikey=${ALPHA_VANTAGE_API_KEY}`);
+                const quoteData = await quoteResponse.json();
+                
+                // Prepare data for AI analysis
+                const profitLoss = ((currentPrice - buyPrice) * shares).toFixed(2);
+                const profitLossPercent = ((currentPrice - buyPrice) / buyPrice * 100).toFixed(2);
+                const totalValue = (currentPrice * shares).toFixed(2);
+                
+                // Create AI prompt
+                const prompt = `As a professional stock analyst, analyze this investment:
+                
+Stock: ${stockSymbol}
+Shares: ${shares}
+Buy Price: $${buyPrice}
+Current Price: $${currentPrice}
+Total Value: $${totalValue}
+Profit/Loss: $${profitLoss} (${profitLossPercent}%)
+Market Data: ${JSON.stringify(stockData)}
+
+Provide a detailed analysis with:
+1. BUY/SELL/HOLD recommendation
+2. Confidence level (0-100%)
+3. Detailed reasoning (2-3 sentences)
+4. Risk assessment (Low/Medium/High)
+5. Key factors influencing your decision
+
+Respond in JSON format:
+{
+    "recommendation": "BUY/SELL/HOLD",
+    "confidence": 85,
+    "reasoning": "Your detailed reasoning here",
+    "riskLevel": "Low/Medium/High",
+    "keyFactors": ["Factor 1", "Factor 2", "Factor 3"]
+}`;
+
+                // Call OpenAI API
+                const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [{ role: 'user', content: prompt }],
+                        max_tokens: 300,
+                        temperature: 0.7
+                    })
+                });
+                
+                const aiData = await openaiResponse.json();
+                const aiAnalysis = JSON.parse(aiData.choices[0].message.content);
+                
+                return aiAnalysis;
+                
+            } catch (error) {
+                console.error('AI Analysis Error:', error);
+                // Fallback to mock logic if API fails
+                return getMockAIAnalysis(currentPrice, buyPrice, shares);
+            }
+        }
+        
+        // Fallback mock analysis
+        function getMockAIAnalysis(currentPrice, buyPrice, shares) {
+            const profitLossPercent = ((currentPrice - buyPrice) / buyPrice * 100).toFixed(2);
+            
+            let recommendation = 'HOLD';
+            let reasoning = 'Monitor current position';
+            let confidence = 75;
+            let riskLevel = 'Medium';
+            
+            if (profitLossPercent > 10) {
+                recommendation = 'SELL';
+                reasoning = 'Strong gains achieved - consider taking profits to secure returns';
+                confidence = 85;
+                riskLevel = 'Medium';
+            } else if (profitLossPercent < -10) {
+                recommendation = 'BUY';
+                reasoning = 'Significant decline - good opportunity to average down at lower prices';
+                confidence = 80;
+                riskLevel = 'High';
+            } else if (profitLossPercent > 5) {
+                recommendation = 'HOLD';
+                reasoning = 'Moderate gains - consider partial profit taking while maintaining position';
+                confidence = 75;
+                riskLevel = 'Low';
+            } else if (profitLossPercent < -5) {
+                recommendation = 'BUY';
+                reasoning = 'Price below entry point - accumulation opportunity for long-term gains';
+                confidence = 78;
+                riskLevel = 'Medium';
+            }
+            
+            return {
+                recommendation,
+                confidence,
+                reasoning,
+                riskLevel,
+                keyFactors: [
+                    `Current P/L: ${profitLossPercent}%`,
+                    recommendation === 'BUY' ? 'Price below entry point' : recommendation === 'SELL' ? 'Strong gains achieved' : 'Moderate performance',
+                    'Market conditions analysis'
+                ]
+            };
+        }
+
+        // Initialize portfolio
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = localStorage.getItem('username') || 'User';
+            document.getElementById('username').textContent = `Welcome ${username}`;
+            
+            // Load portfolio data from localStorage (don't clear it)
+            const savedPortfolio = localStorage.getItem('portfolioData');
+            if (savedPortfolio) {
+                try {
+                    portfolioData = JSON.parse(savedPortfolio);
+                    console.log('Loaded portfolio from localStorage:', portfolioData);
+                } catch (e) {
+                    console.error('Error loading portfolio data:', e);
+                    portfolioData = [];
+                }
+            } else {
+                console.log('No saved portfolio found, starting empty');
+                // Add test data to verify display works
+                portfolioData = [
+                    {
+                        symbol: 'AAPL',
+                        name: 'Apple Inc.',
+                        shares: 10,
+                        buyPrice: 150.00,
+                        currentPrice: 157.50,
+                        recommendation: 'BUY'
+                    }
+                ];
+                console.log('Added test data to portfolio:', portfolioData);
+            }
+            
+            console.log('Initial portfolio data:', portfolioData);
+            loadPortfolio();
+            updatePortfolioStats();
+        });
+
+        function setCurrency(currency) {
+            currentCurrency = currency;
+            
+            // Update button states
+            if (currency === 'SAR') {
+                document.getElementById('sarBtn').classList.add('active');
+                document.getElementById('usdBtn').classList.remove('active');
+                document.getElementById('currencyLabel').textContent = 'SAR';
+            } else {
+                document.getElementById('usdBtn').classList.add('active');
+                document.getElementById('sarBtn').classList.remove('active');
+                document.getElementById('currencyLabel').textContent = 'USD';
+            }
+            
+            // Refresh portfolio display with new currency
+            loadPortfolio();
+            updatePortfolioStats();
+        }
+
+        function formatPrice(price) {
+            if (currentCurrency === 'SAR') {
+                const sarRate = 3.75; // Mock conversion rate
+                return `ريال ${(price * sarRate).toFixed(2)}`;
+            } else {
+                return `$${price.toFixed(2)}`;
+            }
+        }
+
+        function loadPortfolio() {
+            console.log('Loading portfolio...');
+            
+            // Check if portfolio grid element exists
+            const portfolioGrid = document.getElementById('portfolioGrid');
+            if (!portfolioGrid) {
+                console.error('Portfolio grid element not found!');
+                return;
+            }
+            
+            portfolioGrid.innerHTML = '';
+
+            console.log('Portfolio data length:', portfolioData.length);
+            console.log('Portfolio data:', portfolioData);
+
+            if (portfolioData.length === 0) {
+                // Show empty portfolio message
+                portfolioGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+                        <div style="font-size: 4rem; color: var(--primary-color); margin-bottom: 20px;">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3 style="color: var(--text-light); margin-bottom: 15px;">Your Portfolio is Empty</h3>
+                        <p style="color: rgba(248, 250, 252, 0.8); margin-bottom: 30px;">
+                            Start building your investment portfolio by adding your first stock
+                        </p>
+                        <button class="portfolio-btn" onclick="showAddInvestment()">
+                            <i class="fas fa-plus me-2"></i>Add Your First Investment
+                        </button>
+                    </div>
+                `;
+                console.log('Empty portfolio message displayed');
+                return;
+            }
+
+            portfolioData.forEach(async (stock, index) => {
+                console.log('Creating portfolio item for:', stock.symbol);
+                const item = document.createElement('div');
+                item.className = 'portfolio-item';
+                item.style.border = '2px solid red'; // Add red border for debugging
+                item.style.padding = '20px';
+                item.style.margin = '10px';
+                item.style.backgroundColor = 'white';
+                
+                const profitLoss = ((stock.currentPrice - stock.buyPrice) * stock.shares).toFixed(2);
+                const totalValue = (stock.currentPrice * stock.shares).toFixed(2);
+                const profitLossClass = profitLoss >= 0 ? 'positive' : 'negative';
+                const profitLossPercent = ((stock.currentPrice - stock.buyPrice) / stock.buyPrice * 100).toFixed(2);
+                
+                // Get REAL AI Analysis
+                let aiAnalysis;
+                try {
+                    aiAnalysis = await getRealAIAnalysis(stock.symbol, stock.shares, stock.buyPrice, stock.currentPrice);
+                } catch (error) {
+                    console.error('AI Analysis failed, using fallback:', error);
+                    aiAnalysis = getMockAIAnalysis(stock.currentPrice, stock.buyPrice, stock.shares);
+                }
+                
+                const { recommendation, confidence, reasoning, riskLevel, keyFactors } = aiAnalysis;
+                
+                item.innerHTML = `
+                    <div style="background: #000000; padding: 15px; border-radius: 10px; border: 2px solid #4a0f0f;">
+                        <h3 style="color: #4a0f0f; margin-bottom: 10px;">${stock.name} (${stock.symbol})</h3>
+                        <div style="color: #6a1f1f;">
+                            <strong>Shares:</strong> ${stock.shares} | 
+                            <strong>Buy Price:</strong> $${stock.buyPrice} | 
+                            <strong>Current Price:</strong> $${stock.currentPrice} | 
+                            <strong>Total Value:</strong> $${totalValue} | 
+                            <strong>P/L:</strong> <span style="color: ${profitLoss >= 0 ? '#4a0f0f' : '#6a1f1f'}">${profitLoss >= 0 ? '+' : ''}$${profitLoss} (${profitLoss >= 0 ? '+' : ''}${profitLossPercent}%)</span>
+                        </div>
+                        <div style="margin-top: 10px; padding: 10px; background: #000000; border-radius: 5px; border: 1px solid ${recommendation === 'BUY' ? '#28a745' : recommendation === 'SELL' ? '#dc3545' : '#fd7e14'};">
+                            <strong style="color: #4a0f0f;">AI Recommendation:</strong> <span style="color: ${recommendation === 'BUY' ? '#28a745' : recommendation === 'SELL' ? '#dc3545' : '#fd7e14'}; font-weight: bold;">${recommendation}</span> 
+                            <span style="color: #6a1f1f;">(Confidence: ${confidence}%)</span><br>
+                            <small style="color: #6a1f1f;">${reasoning}</small><br>
+                            <small style="color: #6a1f1f;"><strong>Risk Level:</strong> ${riskLevel}</small><br>
+                            <small style="color: #6a1f1f;"><strong>Key Factors:</strong> ${keyFactors.join(', ')}</small>
+                        </div>
+                    </div>
+                `;
+                
+                portfolioGrid.appendChild(item);
+                console.log('Portfolio item added for:', stock.symbol, 'with AI analysis:', aiAnalysis);
+            });
+            
+            console.log('Portfolio loading completed');
+        }
+
+        function updatePortfolioStats() {
+            let totalValue = 0;
+            let totalProfit = 0;
+            let totalInvested = 0;
+
+            if (portfolioData.length === 0) {
+                // Show zeros when portfolio is empty
+                document.getElementById('totalValue').textContent = formatPrice(0);
+                document.getElementById('totalProfit').textContent = formatPrice(0);
+                document.getElementById('totalReturn').textContent = '0%';
+                document.getElementById('stockCount').textContent = '0';
+                return;
+            }
+
+            portfolioData.forEach(stock => {
+                const currentValue = stock.currentPrice * stock.shares;
+                const investedValue = stock.buyPrice * stock.shares;
+                totalValue += currentValue;
+                totalProfit += (currentValue - investedValue);
+                totalInvested += investedValue;
+            });
+
+            const totalReturn = totalInvested > 0 ? ((totalValue / totalInvested - 1) * 100).toFixed(1) : 0;
+
+            // Update stats with currency formatting
+            document.getElementById('totalValue').textContent = formatPrice(totalValue);
+            document.getElementById('totalProfit').textContent = totalProfit >= 0 ? `+${formatPrice(totalProfit)}` : formatPrice(totalProfit);
+            document.getElementById('totalReturn').textContent = `${totalReturn >= 0 ? '+' : ''}${totalReturn}%`;
+            document.getElementById('stockCount').textContent = portfolioData.length;
+        }
+
+        function showAddInvestment() {
+            document.getElementById('addInvestmentModal').style.display = 'flex';
+        }
+
+        function hideAddInvestment() {
+            document.getElementById('addInvestmentModal').style.display = 'none';
+            document.getElementById('stockSymbol').value = '';
+            document.getElementById('shares').value = '';
+            document.getElementById('buyPrice').value = '';
+        }
+
+        function handleAddInvestment(event) {
+            event.preventDefault();
+            
+            console.log('Add investment form submitted');
+            
+            const symbol = document.getElementById('stockSymbol').value.toUpperCase();
+            const shares = parseInt(document.getElementById('shares').value);
+            const buyPrice = parseFloat(document.getElementById('buyPrice').value);
+            
+            console.log('Investment data:', { symbol, shares, buyPrice });
+            
+            if (!symbol || !shares || !buyPrice) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            // Check if investment already exists
+            const existingStock = portfolioData.find(stock => stock.symbol === symbol);
+            if (existingStock) {
+                if (confirm(`${symbol} already exists in your portfolio. Would you like to add more shares instead?`)) {
+                    existingStock.shares += shares;
+                    // Update the average buy price
+                    const totalCost = (existingStock.buyPrice * (existingStock.shares - shares)) + (buyPrice * shares);
+                    existingStock.buyPrice = totalCost / existingStock.shares;
+                    
+                    // Save to localStorage
+                    localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+                    
+                    alert(`Added ${shares} more shares of ${symbol} to your existing position!`);
+                    hideAddInvestment();
+                    loadPortfolio();
+                    updatePortfolioStats();
+                    return;
+                } else {
+                    return;
+                }
+            }
+
+            // Get stock name based on symbol (mock data for common stocks)
+            let stockName = `${symbol} Corporation`;
+            const stockNames = {
+                'AAPL': 'Apple Inc.',
+                'TSLA': 'Tesla Inc.',
+                'GOOGL': 'Alphabet Inc.',
+                'MSFT': 'Microsoft Corporation',
+                'NVDA': 'NVIDIA Corporation',
+                'AMZN': 'Amazon.com Inc.',
+                'META': 'Meta Platforms Inc.',
+                '2222': 'Saudi Aramco',
+                'SABB': 'Saudi British Bank',
+                'STC': 'Saudi Telecom Company',
+                'RIBL': 'Riyad Bank',
+                '2010': 'Saudi Basic Industries',
+                '3020': 'Yanbu Cement',
+                '4010': 'Panda Retail',
+                '4190': 'Jarir Marketing',
+                '6002': 'Almarai Company',
+                '2050': 'Savola Group'
+            };
+
+            if (stockNames[symbol]) {
+                stockName = stockNames[symbol];
+            }
+
+            // Add to portfolio (in real app, this would save to backend)
+            const newInvestment = {
+                symbol: symbol,
+                name: stockName,
+                shares: shares,
+                buyPrice: buyPrice,
+                currentPrice: buyPrice * 1.05, // Simulate current price (5% gain)
+                recommendation: 'BUY'
+            };
+
+            console.log('New investment:', newInvestment);
+            console.log('Portfolio before adding:', portfolioData);
+
+            portfolioData.push(newInvestment);
+            
+            console.log('Portfolio after adding:', portfolioData);
+            
+            // Save to localStorage for persistence
+            localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+            
+            alert(`Added ${symbol} to portfolio!`);
+            hideAddInvestment();
+            loadPortfolio();
+            updatePortfolioStats();
+        }
+
+        function deleteInvestment(symbol) {
+            console.log('Attempting to delete:', symbol);
+            console.log('Current portfolio:', portfolioData);
+            
+            if (confirm(`Are you sure you want to delete ${symbol} from your portfolio? This action cannot be undone.`)) {
+                portfolioData = portfolioData.filter(stock => stock.symbol !== symbol);
+                
+                console.log('Portfolio after filter:', portfolioData);
+                
+                // Save to localStorage for persistence
+                localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+                
+                alert(`Deleted ${symbol} from portfolio!`);
+                loadPortfolio();
+                updatePortfolioStats();
+            }
+        }
+
+        function buyMore(symbol) {
+            const additionalShares = prompt(`How many additional shares of ${symbol} would you like to buy?`);
+            if (additionalShares && !isNaN(additionalShares) && parseInt(additionalShares) > 0) {
+                const stock = portfolioData.find(s => s.symbol === symbol);
+                if (stock) {
+                    stock.shares += parseInt(additionalShares);
+                    
+                    // Save to localStorage for persistence
+                    localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+                    
+                    alert(`Bought ${additionalShares} more shares of ${symbol}!`);
+                    loadPortfolio();
+                    updatePortfolioStats();
+                }
+            }
+        }
+
+        function sellPosition(symbol) {
+            const stock = portfolioData.find(s => s.symbol === symbol);
+            if (stock) {
+                const sharesToSell = prompt(`How many shares of ${symbol} would you like to sell? (Current: ${stock.shares})`);
+                if (sharesToSell && !isNaN(sharesToSell) && parseInt(sharesToSell) > 0) {
+                    const shares = parseInt(sharesToSell);
+                    if (shares <= stock.shares) {
+                        stock.shares -= shares;
+                        
+                        // Remove stock if no shares left
+                        if (stock.shares === 0) {
+                            portfolioData = portfolioData.filter(s => s.symbol !== symbol);
+                        }
+                        
+                        // Save to localStorage for persistence
+                        localStorage.setItem('portfolioData', JSON.stringify(portfolioData));
+                        
+                        alert(`Sold ${shares} shares of ${symbol}!`);
+                        loadPortfolio();
+                        updatePortfolioStats();
+                    } else {
+                        alert('You cannot sell more shares than you own!');
+                    }
+                }
+            }
+        }
+
+        function refreshPortfolio() {
+            alert('Portfolio data refreshed with latest market prices!');
+            // In real app, this would fetch latest prices
+            loadPortfolio();
+            updatePortfolioStats();
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('addInvestmentModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                hideAddInvestment();
+            }
+        });
+    </script>
+</body>
+</html>

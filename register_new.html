@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinSight - Create Account</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a0f0f;
+            --primary-dark: #2a0707;
+            --primary-light: #6a1f1f;
+            --secondary-color: #000000;
+            --accent-color: #1f0505;
+            --text-light: #f8fafc;
+            --text-dark: #1f2937;
+            --bg-dark: #000000;
+            --bg-darker: #0a0a0a;
+            --bg-light: #f9fafb;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #000000, #3d0a0a, #6b1a1a, #000000, #3d0a0a);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(220, 38, 38, 0.1);
+            border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+        }
+
+        .user-info {
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 20px;
+            font-weight: 500;
+        }
+
+        .user-info i {
+            color: var(--primary-color);
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+
+        .register-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(220, 38, 38, 0.2);
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .register-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .register-subtitle {
+            color: rgba(248, 250, 252, 0.8);
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: var(--text-light);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+        }
+
+        .register-btn {
+            width: 100%;
+            background: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .register-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(220, 38, 38, 0.3);
+        }
+
+        .divider-text {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0 15px;
+            color: rgba(248, 250, 252, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .login-link {
+            text-align: center;
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: rgba(248, 250, 252, 0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link a:hover {
+            color: var(--text-light);
+        }
+
+        .requirements {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .requirements-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .requirements-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .requirements-list li {
+            color: rgba(248, 250, 252, 0.8);
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .requirements-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        @media (max-width: 480px) {
+            .main-container { padding: 10px; }
+            .register-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index_new.html">
+                <i class="fas fa-chart-line me-2"></i>FinSight
+            </a>
+            <div class="navbar-nav ms-auto">
+                <div class="user-info">
+                    <i class="fas fa-user me-2"></i>
+                    <span id="userDisplay">Not logged in</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="register-card">
+            <div class="register-header">
+                <h1 class="register-title">
+                    <i class="fas fa-user-plus me-2"></i>Create Account
+                </h1>
+                <p class="register-subtitle">Join FinSight and start your AI-powered investment journey</p>
+            </div>
+
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label" for="fullname">Full Name</label>
+                    <input type="text" class="form-input" id="fullname" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" class="form-input" id="email" placeholder="Enter your email address" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input type="text" class="form-input" id="username" placeholder="Choose a username" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" class="form-input" id="password" placeholder="Create a strong password" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="confirmPassword">Confirm Password</label>
+                    <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm your password" required>
+                </div>
+
+                <div class="requirements">
+                    <h4 class="requirements-title">Password Requirements:</h4>
+                    <ul class="requirements-list">
+                        <li>At least 8 characters long</li>
+                        <li>Contains uppercase and lowercase letters</li>
+                        <li>Contains at least one number</li>
+                        <li>Contains at least one special character</li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="register-btn">
+                    <i class="fas fa-user-plus me-2"></i>Create Account
+                </button>
+            </form>
+
+            <div class="divider">
+                <span class="divider-text">OR</span>
+            </div>
+
+            <div class="login-link">
+                <a href="login_new.html">Already have an account? Sign In</a>
+            </div>
+
+            <div class="back-link">
+                <a href="index_new.html">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize username display for register page
+        document.addEventListener('DOMContentLoaded', function() {
+            const usernameElement = document.getElementById('userDisplay');
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            if (isLoggedIn === 'true') {
+                const username = localStorage.getItem('username') || 'User';
+                usernameElement.textContent = `Welcome ${username}`;
+            } else {
+                usernameElement.textContent = 'Not logged in';
+            }
+        });
+
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validation
+            if (!fullname || !email || !username || !password || !confirmPassword) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters long');
+                return;
+            }
+
+            if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
+                alert('Password must contain both uppercase and lowercase letters');
+                return;
+            }
+
+            if (!/\d/.test(password)) {
+                alert('Password must contain at least one number');
+                return;
+            }
+
+            if (!/[!@#$%^&*]/.test(password)) {
+                alert('Password must contain at least one special character');
+                return;
+            }
+
+            // Simulate registration process
+            const registerBtn = event.target.querySelector('.register-btn');
+            registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Account...';
+            registerBtn.disabled = true;
+
+            setTimeout(() => {
+                // Store user data (in real app, this would be server-side)
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', username);
+                localStorage.setItem('email', email);
+                
+                alert('Account created successfully!');
+                window.location.href = 'dashboard_new.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

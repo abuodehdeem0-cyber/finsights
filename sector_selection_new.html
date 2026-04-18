@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinSight - Sector Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a0f0f;
+            --primary-dark: #2a0707;
+            --primary-light: #6a1f1f;
+            --secondary-color: #000000;
+            --accent-color: #1f0505;
+            --text-light: #f8fafc;
+            --text-dark: #1f2937;
+            --bg-dark: #000000;
+            --bg-darker: #0a0a0a;
+            --bg-light: #f9fafb;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #000000, #3d0a0a, #6b1a1a, #000000, #3d0a0a);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            color: var(--text-light);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(220, 38, 38, 0.1);
+            border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+        }
+
+        .user-info {
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 20px;
+            font-weight: 500;
+        }
+
+        .user-info i {
+            color: var(--primary-color);
+        }
+
+        .currency-toggle {
+            margin-left: 20px;
+        }
+
+        .currency-btn {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .currency-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+        }
+
+        .currency-btn:hover {
+            background: rgba(220, 38, 38, 0.2);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(220, 38, 38, 0.3);
+        }
+
+        .main-container {
+            padding: 40px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: rgba(248, 250, 252, 0.8);
+            line-height: 1.6;
+        }
+
+        .sector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .sector-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .sector-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(220, 38, 38, 0.3);
+            border-color: var(--primary-color);
+        }
+
+        .sector-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .sector-icon.finance {
+            color: #4169E1;
+            text-shadow: 0 0 20px rgba(65, 105, 225, 0.6);
+            animation: glow-blue 2s ease-in-out infinite alternate;
+        }
+
+        .sector-icon.energy {
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            animation: glow-yellow 2s ease-in-out infinite alternate;
+        }
+
+        .sector-icon.healthcare {
+            color: #DC143C;
+            text-shadow: 0 0 20px rgba(220, 20, 60, 0.6);
+            animation: glow-red 2s ease-in-out infinite alternate;
+        }
+
+        .sector-icon.consumer {
+            color: #FFFFFF;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: glow-white 2s ease-in-out infinite alternate;
+        }
+
+        .sector-icon.industrial {
+            color: #8B4513;
+            text-shadow: 0 0 20px rgba(139, 69, 19, 0.6);
+            animation: glow-brown 2s ease-in-out infinite alternate;
+        }
+
+        .sector-icon.technology {
+            color: #808080;
+            text-shadow: 0 0 20px rgba(128, 128, 128, 0.6);
+            animation: glow-grey 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow-blue {
+            from { text-shadow: 0 0 10px rgba(65, 105, 225, 0.3); }
+            to { text-shadow: 0 0 25px rgba(65, 105, 225, 0.8); }
+        }
+
+        @keyframes glow-yellow {
+            from { text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+            to { text-shadow: 0 0 25px rgba(255, 215, 0, 0.8); }
+        }
+
+        @keyframes glow-red {
+            from { text-shadow: 0 0 10px rgba(220, 20, 60, 0.3); }
+            to { text-shadow: 0 0 25px rgba(220, 20, 60, 0.8); }
+        }
+
+        @keyframes glow-white {
+            from { text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+            to { text-shadow: 0 0 25px rgba(255, 255, 255, 0.8); }
+        }
+
+        @keyframes glow-brown {
+            from { text-shadow: 0 0 10px rgba(139, 69, 19, 0.3); }
+            to { text-shadow: 0 0 25px rgba(139, 69, 19, 0.8); }
+        }
+
+        @keyframes glow-grey {
+            from { text-shadow: 0 0 10px rgba(128, 128, 128, 0.3); }
+            to { text-shadow: 0 0 25px rgba(128, 128, 128, 0.8); }
+        }
+
+        .sector-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .sector-description {
+            color: rgba(248, 250, 252, 0.8);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .sector-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(248, 250, 252, 0.7);
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 60px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(220, 38, 38, 0.3);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .recommendation-section {
+            display: none;
+        }
+
+        .recommendation-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .recommendation-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .recommendation-subtitle {
+            font-size: 1.1rem;
+            color: rgba(248, 250, 252, 0.8);
+            margin-bottom: 30px;
+        }
+
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .recommendation-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.3);
+        }
+
+        .action-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .badge-buy {
+            background: #28a745;
+            color: var(--text-light);
+        }
+
+        .badge-sell {
+            background: #dc3545;
+            color: var(--text-light);
+        }
+
+        .badge-hold {
+            background: #fd7e14;
+            color: var(--text-light);
+        }
+
+        .stock-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .stock-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-light);
+            margin-bottom: 15px;
+        }
+
+        .stock-reason {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: rgba(248, 250, 252, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .confidence-score {
+            font-size: 1rem;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .back-button {
+            background: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+
+        .back-button:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .sector-grid { grid-template-columns: 1fr; }
+            .recommendation-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="dashboard_new.html">
+                <i class="fas fa-chart-line me-2"></i>FinSight
+            </a>
+            <div class="navbar-nav ms-auto d-flex align-items-center">
+                <div class="user-info">
+                    <i class="fas fa-user me-2"></i>
+                    <span id="username">Welcome User</span>
+                </div>
+                <div class="currency-toggle">
+                <button class="currency-btn active" id="sarBtn" onclick="setCurrency('SAR')">SAR</button>
+                <button class="currency-btn" id="usdBtn" onclick="setCurrency('USD')">USD</button>
+            </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-industry me-3"></i>Sector Analysis
+            </h1>
+            <p class="page-subtitle">
+                Select a sector to receive AI-powered investment recommendations and analysis
+            </p>
+        </div>
+
+        <!-- Sector Grid -->
+        <div class="sector-grid" id="sectorGrid">
+            <div class="sector-card" onclick="selectSector('saudi-finance')">
+                <div class="sector-icon finance">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="sector-title">Saudi Finance</h3>
+                <p class="sector-description">
+                    Banks, insurance, and financial services companies with strong growth potential
+                </p>
+                <div class="sector-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">18%</div>
+                        <div class="stat-label">Avg Return</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">Low</div>
+                        <div class="stat-label">Risk</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sector-card" onclick="selectSector('saudi-energy')">
+                <div class="sector-icon energy">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="sector-title">Saudi Energy</h3>
+                <p class="sector-description">
+                    Oil, gas, and energy companies driving the kingdom's economic growth
+                </p>
+                <div class="sector-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">22%</div>
+                        <div class="stat-label">Avg Return</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">Medium</div>
+                        <div class="stat-label">Risk</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sector-card" onclick="selectSector('saudi-healthcare')">
+                <div class="sector-icon healthcare">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <h3 class="sector-title">Saudi Healthcare</h3>
+                <p class="sector-description">
+                    Hospitals, clinics, and medical services with expanding healthcare sector
+                </p>
+                <div class="sector-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">16%</div>
+                        <div class="stat-label">Avg Return</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">Low</div>
+                        <div class="stat-label">Risk</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sector-card" onclick="selectSector('saudi-consumer')">
+                <div class="sector-icon consumer">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3 class="sector-title">Saudi Consumer</h3>
+                <p class="sector-description">
+                    Retail, food, beverage, and consumer goods companies serving the growing population
+                </p>
+                <div class="sector-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">14%</div>
+                        <div class="stat-label">Avg Return</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">Low</div>
+                        <div class="stat-label">Risk</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sector-card" onclick="selectSector('saudi-industrial')">
+                <div class="sector-icon industrial">
+                    <i class="fas fa-industry"></i>
+                </div>
+                <h3 class="sector-title">Saudi Industrial</h3>
+                <p class="sector-description">
+                    Manufacturing, construction, and industrial companies supporting Vision 2030
+                </p>
+                <div class="sector-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">16%</div>
+                        <div class="stat-label">Avg Return</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">Medium</div>
+                        <div class="stat-label">Risk</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sector-card" onclick="selectSector('technology')">
+                <div class="sector-icon technology">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <h3 class="sector-title">Technology</h3>
+                <p class="sector-description">
+                    Software, hardware, and technology companies driving innovation and growth
+                </p>
+                <div class="sector-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">20%</div>
+                        <div class="stat-label">Avg Return</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">High</div>
+                        <div class="stat-label">Risk</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner"></div>
+            <h2>Analyzing Sector...</h2>
+            <p>AI is processing market data and generating recommendations</p>
+        </div>
+
+        <!-- Recommendation Section -->
+        <div class="recommendation-section" id="recommendationSection">
+            <div class="recommendation-header">
+                <h2 class="recommendation-title">
+                    <i class="fas fa-robot me-2"></i>AI Analysis Complete
+                </h2>
+                <p class="recommendation-subtitle">
+                    Sector analysis finished successfully. Here are the top recommendations:
+                </p>
+                <button class="back-button" onclick="goBack()">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Sectors
+                </button>
+            </div>
+
+            <div class="recommendation-grid" id="recommendationGrid">
+                <!-- Recommendations will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let selectedSector = '';
+        let currentCurrency = 'SAR';
+
+        // Sector data with recommendations
+        const sectorData = {
+            'saudi-finance': {
+                name: 'Saudi Finance',
+                stocks: [
+                    {
+                        name: 'Saudi British Bank (SABB)',
+                        price: { sar: 45.50, usd: 12.13 },
+                        reason: 'Strong banking sector, Vision 2030 alignment, digital transformation',
+                        confidence: 85,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'Riyad Bank (RIBL)',
+                        price: { sar: 28.75, usd: 7.67 },
+                        reason: 'Islamic finance leadership, government contracts, expansion plans',
+                        confidence: 82,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'Jadwa Investment (4160)',
+                        price: { sar: 68.20, usd: 18.19 },
+                        reason: 'Investment management expertise, diversified portfolio strategy',
+                        confidence: 78,
+                        action: 'HOLD'
+                    },
+                    {
+                        name: 'Saudi Telecom (STC)',
+                        price: { sar: 125.30, usd: 33.41 },
+                        reason: 'Telecom market leader, 5G expansion, digital services growth',
+                        confidence: 88,
+                        action: 'BUY'
+                    }
+                ]
+            },
+            'saudi-energy': {
+                name: 'Saudi Energy',
+                stocks: [
+                    {
+                        name: 'Saudi Aramco (2222)',
+                        price: { sar: 32.10, usd: 8.56 },
+                        reason: 'World\'s largest oil company, Vision 2030 backbone, dividend king',
+                        confidence: 92,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'ACWA Power',
+                        price: { sar: 95.80, usd: 25.55 },
+                        reason: 'Renewable energy leader, giga projects, international expansion',
+                        confidence: 86,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'SECO',
+                        price: { sar: 78.90, usd: 21.04 },
+                        reason: 'Electricity monopoly, renewable energy transition',
+                        confidence: 80,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'Ma\'aden (9303)',
+                        price: { sar: 58.75, usd: 15.67 },
+                        reason: 'Mining diversification, but energy-intensive operations',
+                        confidence: 74,
+                        action: 'HOLD'
+                    }
+                ]
+            },
+            'saudi-healthcare': {
+                name: 'Saudi Healthcare',
+                stocks: [
+                    {
+                        name: 'National Medical Care (4001)',
+                        price: { sar: 92.40, usd: 24.64 },
+                        reason: 'Healthcare expansion, Vision 2030 health goals, hospital network growth',
+                        confidence: 88,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'Dr. Sulaiman Al Habib Medical (4002)',
+                        price: { sar: 88.60, usd: 23.63 },
+                        reason: 'Private healthcare leader, hospital expansion, medical services excellence',
+                        confidence: 85,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'Al Tamyeez Investment (4003)',
+                        price: { sar: 72.30, usd: 19.28 },
+                        reason: 'Medical services growth, healthcare investment opportunities',
+                        confidence: 76,
+                        action: 'HOLD'
+                    },
+                    {
+                        name: 'Bupa Arabia (4004)',
+                        price: { sar: 65.20, usd: 17.39 },
+                        reason: 'Health insurance leader, but regulatory challenges',
+                        confidence: 70,
+                        action: 'SELL'
+                    }
+                ]
+            },
+            'saudi-consumer': {
+                name: 'Saudi Consumer',
+                stocks: [
+                    {
+                        name: 'Almarai (6002)',
+                        price: { sar: 52.80, usd: 14.08 },
+                        reason: 'Food market leader, dairy products, population growth driver',
+                        confidence: 84,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'Savola Group (2050)',
+                        price: { sar: 38.90, usd: 10.37 },
+                        reason: 'Retail giant, food processing, expansion plans',
+                        confidence: 78,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'Panda Retail (4010)',
+                        price: { sar: 35.60, usd: 9.49 },
+                        reason: 'Retail chain leader, consumer goods growth',
+                        confidence: 72,
+                        action: 'HOLD'
+                    },
+                    {
+                        name: 'Jarir Marketing (4190)',
+                        price: { sar: 42.30, usd: 11.28 },
+                        reason: 'Stationery leader, but digital competition pressure',
+                        confidence: 65,
+                        action: 'SELL'
+                    }
+                ]
+            },
+            'saudi-industrial': {
+                name: 'Saudi Industrial',
+                stocks: [
+                    {
+                        name: 'Saudi Basic Industries (2010)',
+                        price: { sar: 85.20, usd: 22.72 },
+                        reason: 'Petrochemical manufacturing, industrial leader, global presence',
+                        confidence: 86,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'Yanbu Cement (3020)',
+                        price: { sar: 65.40, usd: 17.44 },
+                        reason: 'Construction boom, giga projects, cement demand',
+                        confidence: 82,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'National Industrialization (4030)',
+                        price: { sar: 58.90, usd: 15.71 },
+                        reason: 'Industrial diversification, manufacturing expansion',
+                        confidence: 74,
+                        action: 'HOLD'
+                    },
+                    {
+                        name: 'Riyad Cement (5040)',
+                        price: { sar: 62.80, usd: 16.75 },
+                        reason: 'Construction sector, but market competition',
+                        confidence: 68,
+                        action: 'SELL'
+                    }
+                ]
+            },
+            'technology': {
+                name: 'Technology',
+                stocks: [
+                    {
+                        name: 'Apple Inc. (AAPL)',
+                        price: { sar: 562.50, usd: 150.00 },
+                        reason: 'Strong product ecosystem, AI integration, consistent growth',
+                        confidence: 91,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'Microsoft Corporation (MSFT)',
+                        price: { sar: 703.13, usd: 187.50 },
+                        reason: 'Cloud computing leader, AI investments, enterprise dominance',
+                        confidence: 88,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'NVIDIA Corporation (NVDA)',
+                        price: { sar: 1125.00, usd: 300.00 },
+                        reason: 'AI chip dominance, gaming leadership, data center growth',
+                        confidence: 92,
+                        action: 'BUY'
+                    },
+                    {
+                        name: 'Alphabet Inc. (GOOGL)',
+                        price: { sar: 487.50, usd: 130.00 },
+                        reason: 'Search dominance, cloud growth, but regulatory challenges',
+                        confidence: 76,
+                        action: 'HOLD'
+                    }
+                ]
+            }
+        };
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = localStorage.getItem('username') || 'User';
+            document.getElementById('username').textContent = `Welcome ${username}`;
+        });
+
+        function selectSector(sector) {
+            selectedSector = sector;
+            
+            // Hide sectors and show loading
+            document.getElementById('sectorGrid').style.display = 'none';
+            document.querySelector('.page-header').style.display = 'none';
+            document.getElementById('loadingSpinner').style.display = 'block';
+            
+            // Simulate AI processing
+            setTimeout(() => {
+                showRecommendations(sector);
+            }, 3000);
+        }
+
+        function showRecommendations(sector) {
+            const data = sectorData[sector];
+            const grid = document.getElementById('recommendationGrid');
+            grid.innerHTML = '';
+            
+            data.stocks.forEach(stock => {
+                const card = document.createElement('div');
+                card.className = 'recommendation-card';
+                
+                const price = currentCurrency === 'SAR' ? stock.price.sar : stock.price.usd;
+                const symbol = currentCurrency === 'SAR' ? 'ريال' : 'USD';
+                
+                card.innerHTML = `
+                    <div class="action-badge badge-${stock.action.toLowerCase()}">
+                        ${stock.action}
+                    </div>
+                    <h3 class="stock-name">${stock.name}</h3>
+                    <div class="stock-price">
+                        <i class="fas fa-chart-line me-2"></i>${symbol} ${price.toFixed(2)}
+                    </div>
+                    <p class="stock-reason">${stock.reason}</p>
+                    <div class="confidence-score">
+                        <i class="fas fa-brain me-2"></i>AI Confidence: ${stock.confidence}%
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            // Show recommendations
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('recommendationSection').style.display = 'block';
+        }
+
+        function setCurrency(currency) {
+            currentCurrency = currency;
+            
+            // Update button states
+            if (currency === 'SAR') {
+                document.getElementById('sarBtn').classList.add('active');
+                document.getElementById('usdBtn').classList.remove('active');
+            } else {
+                document.getElementById('usdBtn').classList.add('active');
+                document.getElementById('sarBtn').classList.remove('active');
+            }
+            
+            // Refresh recommendations if sector is selected
+            if (selectedSector) {
+                showRecommendations(selectedSector);
+            }
+        }
+
+        function goBack() {
+            document.getElementById('recommendationSection').style.display = 'none';
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.querySelector('.page-header').style.display = 'block';
+            document.getElementById('sectorGrid').style.display = 'grid';
+            selectedSector = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinSight - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a0f0f;
+            --primary-dark: #2a0707;
+            --primary-light: #6a1f1f;
+            --secondary-color: #000000;
+            --accent-color: #1f0505;
+            --text-light: #f8fafc;
+            --text-dark: #1f2937;
+            --bg-dark: #000000;
+            --bg-darker: #0a0a0a;
+            --bg-light: #f9fafb;
+            --card-bg: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #000000, #3d0a0a, #6b1a1a, #000000, #3d0a0a);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            color: var(--text-light);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(220, 38, 38, 0.1);
+            border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+        }
+
+        .user-info {
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .main-container {
+            padding: 30px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .dashboard-subtitle {
+            color: rgba(248, 250, 252, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .action-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px auto;
+            max-width: 1000px;
+        }
+
+        .action-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(220, 38, 38, 0.3);
+            border-color: var(--primary-color);
+        }
+
+        .action-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .action-icon.search {
+            color: #FFFFFF;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+            animation: glow-white 2s ease-in-out infinite alternate;
+        }
+
+        .action-icon.sector {
+            color: #DC143C;
+            text-shadow: 0 0 20px rgba(220, 20, 60, 0.6);
+            animation: glow-red 2s ease-in-out infinite alternate;
+        }
+
+        .action-icon.portfolio {
+            color: #404040;
+            text-shadow: 0 0 20px rgba(64, 64, 64, 0.6);
+            animation: glow-dark-grey 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow-white {
+            from { text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+            to { text-shadow: 0 0 25px rgba(255, 255, 255, 0.8); }
+        }
+
+        @keyframes glow-red {
+            from { text-shadow: 0 0 10px rgba(220, 20, 60, 0.3); }
+            to { text-shadow: 0 0 25px rgba(220, 20, 60, 0.8); }
+        }
+
+        @keyframes glow-dark-grey {
+            from { text-shadow: 0 0 10px rgba(64, 64, 64, 0.3); }
+            to { text-shadow: 0 0 25px rgba(64, 64, 64, 0.8); }
+        }
+
+        .action-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .action-description {
+            color: rgba(248, 250, 252, 0.8);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .portfolio-section {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+        }
+
+        .portfolio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .portfolio-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-light);
+        }
+
+        .portfolio-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .portfolio-btn {
+            background: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .portfolio-item {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .stock-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        .stock-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            text-align: center;
+        }
+
+        .detail-label {
+            font-size: 0.9rem;
+            color: rgba(248, 250, 252, 0.7);
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-light);
+        }
+
+        .ai-recommendation {
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-light));
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .recommendation-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .badge-buy {
+            background: #28a745;
+            color: var(--text-light);
+        }
+
+        .badge-sell {
+            background: #dc3545;
+            color: var(--text-light);
+        }
+
+        .badge-hold {
+            background: #fd7e14;
+            color: var(--text-light);
+        }
+
+        .recommendation-text {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .action-cards { grid-template-columns: 1fr; }
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .stock-details { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index_new.html">
+                <i class="fas fa-chart-line me-2"></i>FinSight
+            </a>
+            <div class="navbar-nav ms-auto">
+                <div class="user-info">
+                    <i class="fas fa-user me-2"></i>
+                    <span id="username">Welcome User</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">
+                <i class="fas fa-tachometer-alt me-3"></i>AI Dashboard
+            </h1>
+            <p class="dashboard-subtitle">Welcome to your intelligent stock analysis platform</p>
+        </div>
+
+        <!-- Action Cards -->
+        <div class="action-cards">
+            <div class="action-card" onclick="goToAnalyzeStock()">
+                <div class="action-icon search">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3 class="action-title">Analyze Stock</h3>
+                <p class="action-description">Get instant AI-powered analysis for any stock</p>
+            </div>
+
+            <div class="action-card" onclick="goToAnalyzeSector()">
+                <div class="action-icon sector">
+                    <i class="fas fa-industry"></i>
+                </div>
+                <h3 class="action-title">Analyze Sector</h3>
+                <p class="action-description">Explore sector-wide investment opportunities</p>
+            </div>
+
+            <div class="action-card" onclick="goToPortfolio()">
+                <div class="action-icon portfolio">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h3 class="action-title">Portfolio</h3>
+                <p class="action-description">Manage your investment portfolio</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = localStorage.getItem('username') || 'User';
+            document.getElementById('username').textContent = `Welcome ${username}`;
+        });
+
+        function goToAnalyzeStock() {
+            window.location.href = 'index_new.html';
+        }
+
+        function goToAnalyzeSector() {
+            window.location.href = 'sector_selection_new.html';
+        }
+
+        function goToPortfolio() {
+            window.location.href = 'portfolio_new.html';
+        }
+    </script>
+</body>
+</html>

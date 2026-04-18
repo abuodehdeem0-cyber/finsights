@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinSight Logo Options</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: #d1d1d1;
+            padding: 40px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #8a8a8a;
+            margin-bottom: 60px;
+            font-size: 1.1rem;
+        }
+        
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .logo-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(107, 21, 21, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-card:hover {
+            border-color: rgba(239, 68, 68, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .logo-card.recommended {
+            border: 2px solid #ef4444;
+            position: relative;
+        }
+        
+        .logo-card.recommended::before {
+            content: "RECOMMENDED";
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #6b1515, #a91d1d);
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .logo-preview {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
+            background: linear-gradient(135deg, #6b1515, #a91d1d);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
+        }
+        
+        .logo-preview svg {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .logo-name {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .logo-description {
+            color: #8a8a8a;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 25px;
+        }
+        
+        .features li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(107, 21, 21, 0.2);
+            font-size: 0.9rem;
+            color: #a0a0a0;
+        }
+        
+        .features li:last-child {
+            border-bottom: none;
+        }
+        
+        .features li::before {
+            content: "✓";
+            color: #22c55e;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .btn-select {
+            background: linear-gradient(135deg, #6b1515, #a91d1d);
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .btn-select:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+        }
+        
+        .btn-select.active {
+            background: #22c55e;
+        }
+        
+        .color-info {
+            margin-top: 60px;
+            padding: 30px;
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 16px;
+            border: 1px solid rgba(107, 21, 21, 0.3);
+        }
+        
+        .color-info h2 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .color-swatches {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .swatch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .swatch-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .swatch-info {
+            font-size: 0.85rem;
+        }
+        
+        .swatch-name {
+            color: #fff;
+            font-weight: 500;
+        }
+        
+        .swatch-hex {
+            color: #8a8a8a;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FinSight Logo Options</h1>
+        <p class="subtitle">Choose your preferred logo variant. All designs follow the Red & Black theme.</p>
+        
+        <div class="logo-grid">
+            <!-- Option 1: Candlestick -->
+            <div class="logo-card">
+                <div class="logo-preview">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="14" width="4" height="10" fill="#22c55e" rx="0.5"/>
+                        <rect x="5" y="10" width="2" height="4" fill="#22c55e"/>
+                        <rect x="5" y="24" width="2" height="3" fill="#22c55e"/>
+                        <rect x="12" y="8" width="4" height="14" fill="#22c55e" rx="0.5"/>
+                        <rect x="13" y="4" width="2" height="4" fill="#22c55e"/>
+                        <rect x="13" y="22" width="2" height="4" fill="#22c55e"/>
+                        <rect x="20" y="12" width="4" height="8" fill="#ef4444" rx="0.5"/>
+                        <rect x="21" y="8" width="2" height="4" fill="#ef4444"/>
+                        <rect x="21" y="20" width="2" height="4" fill="#ef4444"/>
+                        <path d="M6 18 L14 14 L22 16" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                        <path d="M24 14 L28 10 M28 10 L28 14 M28 10 L24 10" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                    </svg>
+                </div>
+                <h3 class="logo-name">Candlestick Chart</h3>
+                <p class="logo-description">
+                    Classic candlestick patterns representing bullish momentum and trading action.
+                </p>
+                <ul class="features">
+                    <li>3 candlestick bars with wicks</li>
+                    <li>Green bullish candles</li>
+                    <li>Trend line with upward arrow</li>
+                    <li>Instantly recognizable by traders</li>
+                </ul>
+                <button class="btn-select" onclick="selectVariant('candlestick')">Select This</button>
+            </div>
+            
+            <!-- Option 2: Bull -->
+            <div class="logo-card">
+                <div class="logo-preview">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="bullGrad" x1="8" y1="12" x2="26" y2="24">
+                                <stop offset="0%" stopColor="#6b1515"/>
+                                <stop offset="100%" stopColor="#a91d1d"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M8 20 C8 16, 10 12, 14 12 C16 12, 18 13, 20 14 L24 12 L26 14 L24 16 C26 18, 26 22, 22 24 C18 26, 12 26, 8 20 Z" 
+                              fill="url(#bullGrad)" stroke="#ef4444" strokeWidth="1.5"/>
+                        <path d="M14 12 C12 8, 10 6, 8 8 M20 14 C22 10, 24 8, 26 10" 
+                              stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                        <circle cx="16" cy="17" r="1.5" fill="#1a1a1a"/>
+                        <ellipse cx="23" cy="19" rx="1" ry="0.8" fill="#1a1a1a"/>
+                        <path d="M4 24 L10 18 L16 20 L24 12" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                    </svg>
+                </div>
+                <h3 class="logo-name">Bull Market</h3>
+                <p class="logo-description">
+                    Stylized bull head representing bullish market sentiment and charging growth.
+                </p>
+                <ul class="features">
+                    <li>Bull head silhouette</li>
+                    <li>Prominent horns</li>
+                    <li>Upward trend integrated</li>
+                    <li>Symbol of market optimism</li>
+                </ul>
+                <button class="btn-select" onclick="selectVariant('bull')">Select This</button>
+            </div>
+            
+            <!-- Option 3: Chart (Recommended) -->
+            <div class="logo-card recommended">
+                <div class="logo-preview">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="trendGrad" x1="6" y1="22" x2="26" y2="10">
+                                <stop offset="0%" stopColor="#ffffff"/>
+                                <stop offset="100%" stopColor="#ef4444"/>
+                            </linearGradient>
+                            <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stopColor="#ef4444" stopOpacity="0.4"/>
+                                <stop offset="100%" stopColor="#6b1515" stopOpacity="0"/>
+                            </radialGradient>
+                        </defs>
+                        <circle cx="16" cy="16" r="14" fill="url(#glowGrad)"/>
+                        <path d="M4 8 L28 8 M4 16 L28 16 M4 24 L28 24" stroke="#8a1c1c" strokeWidth="0.5" strokeDasharray="2 2"/>
+                        <path d="M6 22 L12 18 L18 20 L26 10" stroke="url(#trendGrad)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                        <circle cx="6" cy="22" r="2.5" fill="#6b1515" stroke="#ffffff" strokeWidth="1.5"/>
+                        <circle cx="12" cy="18" r="2.5" fill="#8a1c1c" stroke="#ffffff" strokeWidth="1.5"/>
+                        <circle cx="18" cy="20" r="2.5" fill="#a91d1d" stroke="#ffffff" strokeWidth="1.5"/>
+                        <circle cx="26" cy="10" r="3" fill="#ef4444" stroke="#ffffff" strokeWidth="2"/>
+                        <path d="M24 6 L28 6 L28 10" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                        <path d="M28 6 L22 12" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+                    </svg>
+                </div>
+                <h3 class="logo-name">Trending Chart</h3>
+                <p class="logo-description">
+                    Modern abstract line chart with data points and upward momentum arrow.
+                </p>
+                <ul class="features">
+                    <li>Clean, minimalist design</li>
+                    <li>4 data points with gradient</li>
+                    <li>Subtle grid background</li>
+                    <li>Works at all sizes</li>
+                </ul>
+                <button class="btn-select active" onclick="selectVariant('chart')">Currently Selected</button>
+            </div>
+        </div>
+        
+        <div class="color-info">
+            <h2>Brand Color Palette</h2>
+            <div class="color-swatches">
+                <div class="swatch">
+                    <div class="swatch-color" style="background: #6b1515;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Crimson Dark</div>
+                        <div class="swatch-hex">#6b1515</div>
+                    </div>
+                </div>
+                <div class="swatch">
+                    <div class="swatch-color" style="background: #a91d1d;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Crimson Light</div>
+                        <div class="swatch-hex">#a91d1d</div>
+                    </div>
+                </div>
+                <div class="swatch">
+                    <div class="swatch-color" style="background: #ef4444;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Signal Red</div>
+                        <div class="swatch-hex">#ef4444</div>
+                    </div>
+                </div>
+                <div class="swatch">
+                    <div class="swatch-color" style="background: #0a0a0a; border: 2px solid #333;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Noir Black</div>
+                        <div class="swatch-hex">#0a0a0a</div>
+                    </div>
+                </div>
+                <div class="swatch">
+                    <div class="swatch-color" style="background: #d1d1d1;"></div>
+                    <div class="swatch-info">
+                        <div class="swatch-name">Noir Gray</div>
+                        <div class="swatch-hex">#d1d1d1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function selectVariant(variant) {
+            // Update all buttons
+            document.querySelectorAll('.btn-select').forEach(btn => {
+                btn.classList.remove('active');
+                btn.textContent = 'Select This';
+            });
+            
+            // Update selected button
+            event.target.classList.add('active');
+            event.target.textContent = 'Currently Selected';
+            
+            // Update recommended badge
+            document.querySelectorAll('.logo-card').forEach(card => {
+                card.classList.remove('recommended');
+            });
+            event.target.closest('.logo-card').classList.add('recommended');
+            
+            console.log('Selected variant:', variant);
+            alert(`Logo variant "${variant}" selected! To apply: Edit src/components/logo.tsx and change the default variant.`);
+        }
+    </script>
+</body>
+</html>

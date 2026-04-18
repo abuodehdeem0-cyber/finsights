@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  currency  String   @default("USD")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  portfolios Portfolio[]
+  watchlists Watchlist[]
+  alerts     Alert[]
+
+  @@map("users")
+}
+
+model Portfolio {
+  id        String   @id @default(cuid())
+  userId    String
+  symbol    String
+  shares    Float
+  avgPrice  Float
+  currency  String   @default("USD")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("portfolios")
+}
+
+model Watchlist {
+  id        String   @id @default(cuid())
+  userId    String
+  symbol    String
+  targetPrice Float?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, symbol])
+  @@map("watchlists")
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  userId    String
+  symbol    String
+  condition String
+  price     Float
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  triggeredAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("alerts")
+}
+
+model MarketData {
+  id          String   @id @default(cuid())
+  symbol      String   @unique
+  price       Float
+  change      Float
+  changePercent Float
+  volume      BigInt
+  marketCap   BigInt?
+  peRatio     Float?
+  week52High  Float
+  week52Low   Float
+  updatedAt   DateTime @updatedAt
+
+  @@map("market_data")
+}
