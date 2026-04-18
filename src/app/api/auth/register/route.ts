@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { prisma } from "@/lib/prisma";
+import { createServerSupabaseClient } from "@/lib/supabase";
 import { z } from "zod";
 
 const registerSchema = z.object({
@@ -16,49 +14,66 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, email, password, currency } = registerSchema.parse(body);
 
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
+    const supabase = createServerSupabaseClient();
 
-    if (existingUser) {
-      return NextResponse.json(
-        { error: "User already exists" },
-        { status: 409 }
-      );
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        currency,
+    // Sign up with Supabase Auth
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { name, currency },
       },
     });
 
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.NEXTAUTH_SECRET || "fallback-secret",
-      { expiresIn: "7d" }
-    );
+    if (error) {
+      console.error("REGISTER ERROR:", error.message);
+      if (error.message.includes("already registered")) {
+        return NextResponse.json(
+          { error: "User already exists" },
+          { status: 409 }
+        );
+      }
+      return NextResponse.json(
+        { error: error.message },
+        { status: 400 }
+      );
+    }
+
+    if (!data.user) {
+      return NextResponse.json(
+        { error: "Registration failed" },
+        { status: 500 }
+      );
+    }
+
+    // Create a profile record in the profiles table
+    const { error: profileError } = await supabase.from("profiles").insert({
+      id: data.user.id,
+      email: data.user.email!,
+      name,
+      currency,
+    });
+
+    if (profileError) {
+      console.error("PROFILE CREATE ERROR:", profileError.message);
+      // Don't fail the registration if profile insert fails — user is already created in Auth
+    }
 
     return NextResponse.json(
       {
-        token,
+        token: data.session?.access_token || null,
         user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          currency: user.currency,
+          id: data.user.id,
+          email: data.user.email,
+          name,
+          currency,
         },
       },
       { status: 201 }
     );
   } catch (error) {
     console.error("REGISTER ERROR:", error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Invalid input", details: error.errors },

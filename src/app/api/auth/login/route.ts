@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { prisma } from "@/lib/prisma";
+import { createServerSupabaseClient } from "@/lib/supabase";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -14,56 +12,50 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     console.log("[API Login] Request body:", { email: body.email });
-    
+
     const { email, password } = loginSchema.parse(body);
     console.log("[API Login] Schema validation passed");
 
-    const user = await prisma.user.findUnique({
-      where: { email },
+    const supabase = createServerSupabaseClient();
+
+    // Sign in with Supabase Auth
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
-    console.log("[API Login] User lookup result:", user ? "Found" : "Not found");
 
-    if (!user) {
-      console.log("[API Login] User not found");
+    if (error || !data.user) {
+      console.log("[API Login] Supabase auth error:", error?.message);
       return NextResponse.json(
         { error: "Invalid credentials" },
         { status: 401 }
       );
     }
 
-    console.log("[API Login] Comparing passwords...");
-    const isValid = await bcrypt.compare(password, user.password);
-    console.log("[API Login] Password valid:", isValid);
+    console.log("[API Login] Auth successful, fetching profile...");
 
-    if (!isValid) {
-      console.log("[API Login] Invalid password");
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 401 }
-      );
-    }
+    // Fetch the user profile from our profiles table
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", data.user.id)
+      .single();
 
-    console.log("[API Login] Generating JWT token...");
-    const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.NEXTAUTH_SECRET || "fallback-secret",
-      { expiresIn: "7d" }
-    );
-    console.log("[API Login] Token generated successfully");
+    const userProfile = {
+      id: data.user.id,
+      email: data.user.email!,
+      name: profile?.name || data.user.user_metadata?.name || null,
+      currency: profile?.currency || "USD",
+    };
 
     console.log("[API Login] Sending success response");
     return NextResponse.json({
-      token,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        currency: user.currency,
-      },
+      token: data.session?.access_token,
+      user: userProfile,
     });
   } catch (error) {
     console.error("[API Login] ERROR:", error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Invalid input", details: error.errors },

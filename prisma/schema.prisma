@@ -3,83 +3,83 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
+model Profile {
+  id        String   @id
   email     String   @unique
   name      String?
-  password  String
   currency  String   @default("USD")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   portfolios Portfolio[]
   watchlists Watchlist[]
   alerts     Alert[]
 
-  @@map("users")
+  @@map("profiles")
 }
 
 model Portfolio {
   id        String   @id @default(cuid())
-  userId    String
+  userId    String   @map("user_id")
   symbol    String
   shares    Float
-  avgPrice  Float
+  avgPrice  Float    @map("avg_price")
   currency  String   @default("USD")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profile Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("portfolios")
 }
 
 model Watchlist {
-  id        String   @id @default(cuid())
-  userId    String
-  symbol    String
-  targetPrice Float?
-  notes     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  symbol      String
+  targetPrice Float?   @map("target_price")
+  notes       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profile Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, symbol])
   @@map("watchlists")
 }
 
 model Alert {
-  id        String   @id @default(cuid())
-  userId    String
-  symbol    String
-  condition String
-  price     Float
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  triggeredAt DateTime?
+  id          String    @id @default(cuid())
+  userId      String    @map("user_id")
+  symbol      String
+  condition   String
+  price       Float
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  triggeredAt DateTime? @map("triggered_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profile Profile @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("alerts")
 }
 
 model MarketData {
-  id          String   @id @default(cuid())
-  symbol      String   @unique
-  price       Float
-  change      Float
-  changePercent Float
-  volume      BigInt
-  marketCap   BigInt?
-  peRatio     Float?
-  week52High  Float
-  week52Low   Float
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(cuid())
+  symbol        String   @unique
+  price         Float
+  change        Float
+  changePercent Float    @map("change_percent")
+  volume        BigInt
+  marketCap     BigInt?  @map("market_cap")
+  peRatio       Float?   @map("pe_ratio")
+  week52High    Float    @map("week52_high")
+  week52Low     Float    @map("week52_low")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
   @@map("market_data")
 }

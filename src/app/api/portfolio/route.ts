@@ -1,22 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { createServerSupabaseClient } from "@/lib/supabase";
 import { z } from "zod";
 
 // Helper to detect if Saudi stock and auto-append .SR
 function normalizeSymbol(symbol: string): { symbol: string; currency: string } {
   const clean = symbol.trim().toUpperCase();
-  
-  // If already has .SR suffix
+
   if (clean.endsWith(".SR")) {
     return { symbol: clean, currency: "SAR" };
   }
-  
-  // If 4 digits (Saudi Tadawul format)
+
   if (/^\d{4}$/.test(clean)) {
     return { symbol: `${clean}.SR`, currency: "SAR" };
   }
-  
-  // Default to USD for US/international stocks
+
   return { symbol: clean, currency: "USD" };
 }
 
@@ -27,61 +24,108 @@ const portfolioSchema = z.object({
   currency: z.enum(["USD", "SAR"]).optional(),
 });
 
+// Extract user ID from Supabase JWT token in header
+async function getUserIdFromRequest(request: NextRequest): Promise<string | null> {
+  const supabase = createServerSupabaseClient();
+
+  // Try Authorization Bearer token first
+  const authHeader = request.headers.get("authorization");
+  if (authHeader?.startsWith("Bearer ")) {
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    if (!error && user) return user.id;
+  }
+
+  // Fallback: x-user-id header (legacy support)
+  return request.headers.get("x-user-id");
+}
+
 export async function GET(request: NextRequest) {
   try {
-    const userId = request.headers.get("x-user-id");
+    const userId = await getUserIdFromRequest(request);
 
     if (!userId) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const portfolios = await prisma.portfolio.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-    });
+    const supabase = createServerSupabaseClient();
 
-    return NextResponse.json(portfolios);
+    const { data: portfolios, error } = await supabase
+      .from("portfolios")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching portfolio:", error.message);
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    }
+
+    // Map snake_case DB columns to camelCase for frontend compatibility
+    const mapped = (portfolios || []).map((p) => ({
+      id: p.id,
+      userId: p.user_id,
+      symbol: p.symbol,
+      shares: p.shares,
+      avgPrice: p.avg_price,
+      currency: p.currency,
+      createdAt: p.created_at,
+      updatedAt: p.updated_at,
+    }));
+
+    return NextResponse.json(mapped);
   } catch (error) {
     console.error("Error fetching portfolio:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const userId = request.headers.get("x-user-id");
+    const userId = await getUserIdFromRequest(request);
 
     if (!userId) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await request.json();
     const { symbol, shares, avgPrice, currency: inputCurrency } = portfolioSchema.parse(body);
 
-    // Auto-detect currency and normalize symbol
     const { symbol: normalizedSymbol, currency: detectedCurrency } = normalizeSymbol(symbol);
     const finalCurrency = inputCurrency || detectedCurrency;
 
-    const portfolio = await prisma.portfolio.create({
-      data: {
-        userId,
+    const supabase = createServerSupabaseClient();
+
+    const { data: portfolio, error } = await supabase
+      .from("portfolios")
+      .insert({
+        user_id: userId,
         symbol: normalizedSymbol,
         shares,
-        avgPrice,
+        avg_price: avgPrice,
         currency: finalCurrency,
-      },
-    });
+      })
+      .select()
+      .single();
 
-    return NextResponse.json(portfolio, { status: 201 });
+    if (error) {
+      console.error("Error creating portfolio entry:", error.message);
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    }
+
+    return NextResponse.json(
+      {
+        id: portfolio.id,
+        userId: portfolio.user_id,
+        symbol: portfolio.symbol,
+        shares: portfolio.shares,
+        avgPrice: portfolio.avg_price,
+        currency: portfolio.currency,
+        createdAt: portfolio.created_at,
+        updatedAt: portfolio.updated_at,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -91,36 +135,36 @@ export async function POST(request: NextRequest) {
     }
 
     console.error("Error creating portfolio entry:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
-    const userId = request.headers.get("x-user-id");
+    const userId = await getUserIdFromRequest(request);
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
     if (!userId || !id) {
-      return NextResponse.json(
-        { error: "Unauthorized or missing ID" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized or missing ID" }, { status: 401 });
     }
 
-    await prisma.portfolio.delete({
-      where: { id, userId },
-    });
+    const supabase = createServerSupabaseClient();
+
+    const { error } = await supabase
+      .from("portfolios")
+      .delete()
+      .eq("id", id)
+      .eq("user_id", userId);
+
+    if (error) {
+      console.error("Error deleting portfolio entry:", error.message);
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting portfolio entry:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
