@@ -303,7 +303,7 @@ function AnalysisPage() {
       e.preventDefault();
       const validation = validateInput(symbol, t);
       if (!validation.isValid) {
-        setError(validation.error);
+        setError(validation.error || null);
         return;
       }
       ticker = validation.normalizedSymbol;

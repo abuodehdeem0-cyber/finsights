@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
@@ -11,7 +11,7 @@ import { useLanguage } from "@/lib/language-context";
 import { Logo } from "@/components/logo";
 import { showToast } from "@/components/toast";
 
-export default function LoginPage() {
+function LoginContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -214,5 +214,17 @@ export default function LoginPage() {
         </GlassCard>
       </motion.div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-noir-crimson" />
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }

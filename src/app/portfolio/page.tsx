@@ -487,6 +487,12 @@ export default function PortfolioPage() {
     }
   };
 
+  const clearDataAndReload = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.reload();
+  };
+
   const getVerdictColor = (verdict?: string) => {
     switch (verdict) {
       case "BUY": return "bg-signal-buy/20 text-signal-buy border-signal-buy/50";
