@@ -177,12 +177,16 @@ async function analyzeStock(symbol: string, t: any): Promise<AnalysisResult | nu
 
     // Market-specific reasoning (translated)
     const positiveTrend = quote.changePercent >= 0;
+    // Translate sector for reasoning string
+    const sectorKey = sector.toLowerCase().replace(/\s+/g, '');
+    const translatedSector = (t.sectors as any)[sectorKey] || sector;
+
     const baseReasoning = [
       t.analysis.reasoning.priceMomentum
         .replace('{trend}', positiveTrend ? t.analysisDetails.bullish : t.analysisDetails.bearish)
         .replace('{value}', formatPercentage(quote.changePercent)),
       t.analysis.reasoning.sectorStrength
-        .replace('{sector}', sector)
+        .replace('{sector}', translatedSector)
         .replace('{trend}', positiveTrend ? t.analysis.reasoning.strength : t.analysis.reasoning.consolidation),
     ];
 
@@ -215,7 +219,9 @@ async function analyzeStock(symbol: string, t: any): Promise<AnalysisResult | nu
       stopLoss: quote.price * (1 - (signal === "BUY" ? 0.05 : signal === "SELL" ? 0.08 : 0.03)),
       reasoning: baseReasoning,
       sector,
-      marketCap: overview?.marketCap ? `$${marketCapBillions}B` : t.analysis.notAvailable,
+      marketCap: overview?.marketCap 
+        ? `${currency === 'SAR' ? '' : '$'}${marketCapBillions}${t.analysis.billion}` 
+        : t.analysis.notAvailable,
       currency,
       marketType: marketInfo.type,
       marketInfo,

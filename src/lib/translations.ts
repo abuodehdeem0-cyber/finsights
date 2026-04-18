@@ -185,6 +185,8 @@ export const translations = {
       hold: "HOLD",
       unknown: "Unknown",
       notAvailable: "N/A",
+      billion: "B",
+      million: "M",
       errors: {
         noSymbol: "Please enter a stock symbol",
         invalidSymbol: "Invalid symbol. Use: AAPL (US), 2222 (Saudi), or 2222.SA / 2222.SR",
@@ -697,6 +699,8 @@ export const translations = {
       hold: "انتظار",
       unknown: "غير معروف",
       notAvailable: "غير متاح",
+      billion: "مليار",
+      million: "مليون",
       errors: {
         noSymbol: "الرجاء إدخال رمز السهم",
         invalidSymbol: "رمز غير صالح. استخدم: AAPL (أمريكي)، 2222 (سعودي)، أو 2222.SA / 2222.SR",
