@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useScroll, useTransform, motion } from "framer-motion";
 import {
   TrendingUp,
   Brain,
