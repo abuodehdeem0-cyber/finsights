@@ -40,6 +40,14 @@ async function getUserIdFromRequest(request: NextRequest): Promise<string | null
   return request.headers.get("x-user-id");
 }
 
+function extractToken(request: NextRequest): string | undefined {
+  const authHeader = request.headers.get("authorization");
+  if (authHeader?.startsWith("Bearer ")) {
+    return authHeader.replace("Bearer ", "");
+  }
+  return undefined;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const userId = await getUserIdFromRequest(request);
@@ -48,7 +56,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const supabase = createServerSupabaseClient();
+    const token = extractToken(request);
+    const supabase = createServerSupabaseClient(token);
 
     const { data: portfolios, error } = await supabase
       .from("portfolios")
@@ -94,7 +103,8 @@ export async function POST(request: NextRequest) {
     const { symbol: normalizedSymbol, currency: detectedCurrency } = normalizeSymbol(symbol);
     const finalCurrency = inputCurrency || detectedCurrency;
 
-    const supabase = createServerSupabaseClient();
+    const token = extractToken(request);
+    const supabase = createServerSupabaseClient(token);
 
     const { data: portfolio, error } = await supabase
       .from("portfolios")
@@ -149,7 +159,8 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized or missing ID" }, { status: 401 });
     }
 
-    const supabase = createServerSupabaseClient();
+    const token = extractToken(request);
+    const supabase = createServerSupabaseClient(token);
 
     const { error } = await supabase
       .from("portfolios")

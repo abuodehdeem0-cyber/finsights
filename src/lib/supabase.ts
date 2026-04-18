@@ -7,15 +7,26 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Server-side Supabase client (uses service role for admin operations)
-export function createServerSupabaseClient() {
+export function createServerSupabaseClient(token?: string) {
   const serviceRoleKey =
     process.env.SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKey;
-  return createClient(supabaseUrl, serviceRoleKey, {
+    
+  const options: any = {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
     },
-  });
+  };
+
+  if (token) {
+    options.global = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+  }
+
+  return createClient(supabaseUrl, serviceRoleKey, options);
 }
 
 // Database types matching our schema
