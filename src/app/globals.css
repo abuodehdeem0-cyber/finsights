@@ -41,13 +41,12 @@ body {
 }
 
 .glass-card {
-  background: rgba(10, 10, 10, 0.85);
+  background: rgba(10, 10, 10, 0.95);
   border: 1px solid rgba(74, 15, 15, 0.3);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .glow-crimson {
-  box-shadow: 0 0 20px rgba(74, 15, 15, 0.5), 0 0 40px rgba(74, 15, 15, 0.3);
+  border: 1px solid rgba(107, 21, 21, 0.8);
 }
 
 .interactive-glow {
@@ -55,7 +54,7 @@ body {
 }
 
 .interactive-glow:hover {
-  box-shadow: 0 0 20px rgba(74, 15, 15, 0.4);
+  border-color: rgba(107, 21, 21, 0.8);
   transform: translateY(-1px);
 }
 
@@ -103,7 +102,6 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: #6b1515;
-  box-shadow: 0 0 10px rgba(74, 15, 15, 0.3);
 }
 
 .btn-crimson {
@@ -115,7 +113,6 @@ select:focus {
 
 .btn-crimson:hover {
   background: linear-gradient(135deg, #6b1515 0%, #8b1a1a 100%);
-  box-shadow: 0 0 15px rgba(74, 15, 15, 0.4);
 }
 
 .grid-pattern {

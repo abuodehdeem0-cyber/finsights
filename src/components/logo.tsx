@@ -165,9 +165,6 @@ function ChartIcon({ size }: { size: number }) {
         fill="none"
       />
       
-      {/* Glow effect circle behind */}
-      <circle cx="16" cy="16" r="14" fill="url(#glowGradient)" opacity="0.3" />
-      
       <defs>
         <linearGradient id="trendGradient" x1="6" y1="22" x2="26" y2="10">
           <stop offset="0%" stopColor="#6b1515" />
@@ -218,12 +215,12 @@ export function Logo({ variant = "chart", size = "md", showText = true, classNam
         </div>
         
         {/* Outer glow effect on hover */}
-        <div className="absolute inset-0 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300 shadow-[0_0_20px_rgba(239,68,68,0.5)]" />
+        <div className="absolute inset-0 rounded-xl opacity-0 hover:opacity-100 transition-opacity duration-300 border border-noir-crimson-light" />
       </motion.div>
       
       {showText && (
         <motion.span 
-          className={`font-semibold text-gradient-crimson ${sizeConfig.text}`}
+          className={`font-semibold text-noir-gray ${sizeConfig.text}`}
           whileHover={{ x: 2 }}
           transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
@@ -244,7 +241,6 @@ export function LogoIcon({ variant = "chart", size = 32, className = "" }: { var
 
   return (
     <div className={`relative ${className}`}>
-      <div className="absolute inset-0 bg-noir-crimson/20 rounded-lg blur-xl" />
       <div className="relative">
         <IconComponent size={size} />
       </div>
