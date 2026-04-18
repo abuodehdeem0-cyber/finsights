@@ -162,11 +162,16 @@ async function analyzeStock(symbol: string, t: any): Promise<AnalysisResult | nu
     const marketCapBillions = overview?.marketCap ? (overview.marketCap / 1e9).toFixed(2) : "N/A";
 
     // Get market-specific risk factors
-    const marketSpecificRisks = getMarketRiskFactors(marketInfo.type, sector);
+    const marketSpecificRisks = marketInfo.type === 'SAUDI' 
+      ? t.analysisDetails.marketRisks.saudi 
+      : t.analysisDetails.marketRisks.us;
+    
+    // Get generic risk factors based on risk level
+    const genericRiskFactors = t.analysisDetails.riskFactors[risk.level.toLowerCase() as keyof typeof t.analysisDetails.riskFactors] || [];
     
     // Combine generic and market-specific risks
     const allRiskFactors = [
-      ...risk.factors.slice(0, 2),
+      ...genericRiskFactors.slice(0, 2),
       ...marketSpecificRisks.slice(0, 3)
     ].slice(0, 4);
 

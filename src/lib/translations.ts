@@ -283,6 +283,46 @@ export const translations = {
       usMarkets: "US Markets",
       tadawul: "Tadawul",
       confidence: "Confidence",
+      riskFactors: {
+        low: [
+          "Stable price movement over 30 days",
+          "Low beta relative to market",
+          "Consistent trading volume",
+          "Strong institutional backing",
+          "Established dividend history",
+        ],
+        medium: [
+          "Moderate price swings within expected range",
+          "Average market correlation",
+          "Sector-specific volatility present",
+          "Earnings-driven fluctuations",
+          "Moderate liquidity concerns",
+        ],
+        high: [
+          "Significant intraday price movements",
+          "High beta indicating market sensitivity",
+          "Low liquidity causing slippage",
+          "Recent news-driven volatility",
+          "Elevated options activity",
+        ],
+      },
+      marketRisks: {
+        saudi: [
+          "Oil price correlation exposure",
+          "Vision 2030 policy impact",
+          "Saudi regulatory environment",
+          "Currency (SAR) pegged to USD",
+          "Regional geopolitical factors",
+          "Liquidity on Tadawul exchange"
+        ],
+        us: [
+          "Fed interest rate policy impact",
+          "Earnings volatility risk",
+          "Market correlation exposure",
+          "Sector rotation sensitivity",
+          "Macroeconomic indicators"
+        ]
+      }
     },
 
     // Sectors
@@ -612,6 +652,46 @@ export const translations = {
       usMarkets: "الأسواق الأمريكية",
       tadawul: "تداول",
       confidence: "الثقة",
+      riskFactors: {
+        low: [
+          "حركة سعر مستقرة خلال 30 يوماً",
+          "بيتا منخفضة بالنسبة للسوق",
+          "حجم تداول ثابت ومستمر",
+          "دعم مؤسسي قوي",
+          "سجل حافل في توزيع الأرباح",
+        ],
+        medium: [
+          "تذبذبات سعرية معتدلة وضمن النطاق المتوقع",
+          "ارتباط متوسط بالسوق",
+          "وجود تذبذبات خاصة بالقطاع",
+          "تقلبات مدفوعة بإعلانات الأرباح",
+          "مخاوف سيولة معتدلة",
+        ],
+        high: [
+          "تحركات سعرية يومية كبيرة",
+          "بيتا مرتفعة تشير إلى حساسية السوق",
+          "سيولة منخفضة تؤدي إلى فجوات سعرية",
+          "تذبذبات مدفوعة بأخبار حديثة",
+          "نشاط متزايد في عقود الخيارات",
+        ],
+      },
+      marketRisks: {
+        saudi: [
+          "التعرض للارتباط بأسعار النفط",
+          "تأثير سياسات رؤية 2030",
+          "البيئة التنظيمية السعودية",
+          "العملة (الريال) مربوطة بالدولار",
+          "العوامل الجيوسياسية الإقليمية",
+          "حالة السيولة في سوق تداول"
+        ],
+        us: [
+          "تأثير سياسات الفائدة للفيدرالي الأمريكي",
+          "مخاطر تقلبات مواسم الأرباح",
+          "التعرض لارتباط المؤشرات الكبرى",
+          "حساسية تدوير القطاعات",
+          "المؤشرات الاقتصادية الكلية (الماكرو)"
+        ]
+      }
     },
 
     // Sectors

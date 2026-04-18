@@ -147,7 +147,7 @@ const itemVariants = {
 };
 
 export default function SectorHubPage() {
-  const { t, isRTL } = useLanguage();
+  const { t, isRTL, locale } = useLanguage();
 
   return (
     <motion.div
@@ -170,7 +170,7 @@ export default function SectorHubPage() {
           const Icon = sector.icon;
           return (
             <motion.div key={sector.id} variants={itemVariants}>
-              <Link href={`/sectors/${sector.id}`}>
+              <Link href={`/${locale}/sectors/${sector.id}`}>
                 <GlassCard
                   className={`p-5 bg-gradient-to-br ${getHeatmapColor(
                     sector.heatmap

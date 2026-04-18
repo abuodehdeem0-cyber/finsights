@@ -8,10 +8,11 @@ export function middleware(request: NextRequest) {
   
   console.log(`[Middleware] Current Path: ${pathname}`);
   
-  // URL STANDARDIZATION: Redirect /portfolio to /en/portfolio
-  if (pathname === "/portfolio") {
-    console.log(`[Middleware] Redirecting /portfolio to /en/portfolio for consistency`);
-    return NextResponse.redirect(new URL("/en/portfolio", request.url));
+  // URL STANDARDIZATION: Redirect top-level links to the default language explicitly
+  const defaultLangRoutes = ["/portfolio", "/analysis", "/sectors", "/login", "/register", "/dashboard"];
+  if (defaultLangRoutes.includes(pathname)) {
+    console.log(`[Middleware] Redirecting ${pathname} to /en${pathname} for consistency`);
+    return NextResponse.redirect(new URL(`/en${pathname}`, request.url));
   }
   
   // Check if the path is a protected route (supporting both /route and /[locale]/route)

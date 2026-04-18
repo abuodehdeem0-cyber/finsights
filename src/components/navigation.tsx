@@ -42,7 +42,7 @@ const getNavItems = (t: any) => ({
 export function Navigation() {
   const pathname = usePathname();
   const { user, isLoading, logout } = useAuth();
-  const { isRTL, t } = useLanguage();
+  const { isRTL, t, locale } = useLanguage();
   
   const navItemsConfig = getNavItems(t);
   const navItems = user ? navItemsConfig.private : [...navItemsConfig.public, ...navItemsConfig.auth];
@@ -61,13 +61,17 @@ export function Navigation() {
 
           <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => {
-              const isActive = pathname === item.href;
+              // Ensure that paths are localized natively
+              const resolvedHref = item.href === "/" ? `/${locale}` : `/${locale}${item.href}`;
+              
+              // Normalize pathname for active checking
+              const isActive = pathname === resolvedHref || pathname === item.href;
               const Icon = item.icon;
 
               return (
                 <Link
                   key={item.name}
-                  href={item.href}
+                  href={resolvedHref}
                   className={cn(
                     "relative px-4 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200",
                     "text-noir-gray-dark hover:text-noir-gray hover:bg-noir-crimson/20",
