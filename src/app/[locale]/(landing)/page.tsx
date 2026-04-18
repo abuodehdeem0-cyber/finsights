@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useRouter } from "next/navigation";
 import {
   TrendingUp,
   Brain,
@@ -21,6 +19,7 @@ import {
   Clock,
   CheckCircle2,
   Play,
+  Search,
 } from "lucide-react";
 import { GlassCard } from "@/components/ui/glass-card";
 import { useLanguage } from "@/lib/language-context";
@@ -145,9 +144,11 @@ function ParticleBackground() {
 }
 
 export default function LandingPage() {
+  const router = useRouter();
   const { t, locale, isRTL } = useLanguage();
   const { user } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [searchSymbol, setSearchSymbol] = useState("");
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -264,10 +265,44 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl md:text-2xl text-noir-gray-dark mb-10 max-w-3xl mx-auto"
+            className="text-xl md:text-2xl text-noir-gray-dark mb-8 max-w-3xl mx-auto"
           >
             {t.landing?.hero?.subtitle || "Premium financial terminal with AI-powered investment signals, real-time market data, and dual-currency portfolio tracking for the modern trader."}
           </motion.p>
+
+          {/* AI Search Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.25 }}
+            className="max-w-2xl mx-auto mb-10"
+          >
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (searchSymbol.trim()) {
+                  router.push(`/${locale}/analysis?ticker=${searchSymbol.trim().toUpperCase()}`);
+                }
+              }} 
+              className="relative group"
+            >
+              <Search className={`absolute ${isRTL ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 w-6 h-6 text-noir-gray-dark group-focus-within:text-noir-crimson-light transition-colors`} />
+              <input
+                type="text"
+                value={searchSymbol}
+                onChange={(e) => setSearchSymbol(e.target.value)}
+                placeholder={t.analysis?.searchPlaceholder || "Search stocks (e.g., AAPL, 2222.SR)"}
+                className={`w-full ${isRTL ? 'pr-14 pl-44' : 'pl-14 pr-44'} py-5 rounded-2xl bg-noir-dark/80 border border-noir-crimson/30 text-noir-gray text-lg placeholder:text-noir-gray-darker focus:outline-none focus:border-noir-crimson-light focus:ring-1 focus:ring-noir-crimson-light/50 transition-all backdrop-blur-xl shadow-2xl shadow-noir-crimson/10`}
+              />
+              <button
+                type="submit"
+                className={`absolute ${isRTL ? 'left-2' : 'right-2'} top-2 bottom-2 px-8 bg-gradient-to-r from-noir-crimson to-noir-crimson-light rounded-xl font-bold text-noir-gray hover:shadow-lg hover:shadow-noir-crimson/20 transition-all flex items-center gap-2`}
+              >
+                <Brain className="w-5 h-5" />
+                <span>{t.analysis?.analyzeButton || "Analyze"}</span>
+              </button>
+            </form>
+          </motion.div>
           
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -276,7 +311,7 @@ export default function LandingPage() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Link
-              href={`/${locale}/dashboard`}
+              href={user ? `/${locale}/dashboard` : `/${locale}/register`}
               className="group relative px-8 py-4 bg-gradient-to-r from-noir-crimson to-noir-crimson-light rounded-xl font-semibold text-noir-gray overflow-hidden interactive-glow"
             >
               <span className="relative z-10 flex items-center">
@@ -286,13 +321,25 @@ export default function LandingPage() {
               <div className="absolute inset-0 bg-gradient-to-r from-noir-crimson-light to-noir-crimson-glow opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
             
-            <Link
-              href={`/${locale}/analysis`}
-              className="group px-8 py-4 glass-card rounded-xl font-semibold text-noir-gray hover:bg-noir-crimson/20 transition-all flex items-center"
-            >
-              <Play className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'} text-noir-crimson-light`} />
-              {t.landing?.cta?.demo || "Try AI Analysis"}
-            </Link>
+            {!user && (
+              <Link
+                href={`/${locale}/login`}
+                className="group px-8 py-4 glass-card rounded-xl font-semibold text-noir-gray hover:bg-noir-crimson/20 transition-all flex items-center"
+              >
+                <Lock className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'} text-noir-crimson-light`} />
+                {t.landing?.cta?.signIn || "Sign In"}
+              </Link>
+            )}
+            
+            {user && (
+              <Link
+                href={`/${locale}/analysis`}
+                className="group px-8 py-4 glass-card rounded-xl font-semibold text-noir-gray hover:bg-noir-crimson/20 transition-all flex items-center"
+              >
+                <Play className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'} text-noir-crimson-light`} />
+                {t.landing?.cta?.demo || "Try AI Analysis"}
+              </Link>
+            )}
           </motion.div>
           
           {/* Trust indicators */}

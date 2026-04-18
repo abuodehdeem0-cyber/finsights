@@ -165,30 +165,19 @@ export default function DashboardPage() {
   // Fetch chart data based on timeframe
   const fetchChartData = useCallback(async (tf: Timeframe, symbol: string = "^GSPC") => {
     setChartLoading(true);
-    console.log(`[Chart Debug] Fetching data for ${symbol}, timeframe: ${tf}`);
     try {
       const res = await fetch(`/api/market/historical?symbol=${encodeURIComponent(symbol)}&timeframe=${tf}`);
-      console.log(`[Chart Debug] Response status: ${res.status}`);
-      
       if (res.ok) {
         const data = await res.json();
-        console.log(`[Chart Debug] Response data:`, data);
-        
         if (data.data && Array.isArray(data.data) && data.data.length > 0) {
-          console.log(`[Chart Debug] Setting chart data with ${data.data.length} points`);
           setChartData(data.data);
           setChartSymbol(symbol);
         } else {
-          console.warn(`[Chart Debug] No data returned or empty array`);
           setChartData([]);
         }
-      } else {
-        console.error(`[Chart Debug] HTTP error: ${res.status}`);
-        const errorText = await res.text();
-        console.error(`[Chart Debug] Error response:`, errorText);
       }
     } catch (error) {
-      console.error("[Chart Debug] Error fetching chart data:", error);
+      console.error("Error fetching chart data:", error);
     } finally {
       setChartLoading(false);
     }
@@ -241,14 +230,13 @@ export default function DashboardPage() {
         let dailyPnL = 0;
         
         // Fetch current prices for all positions
-        const positionsWithPrices = await Promise.all(
+        await Promise.all(
           positions.map(async (pos: any) => {
             try {
               const quoteRes = await fetch(`/api/market/quote?symbol=${encodeURIComponent(pos.symbol)}`);
               if (quoteRes.ok) {
                 const quote = await quoteRes.json();
                 const currentPrice = quote.price || pos.avgPrice;
-                const prevClose = quote.price - quote.change; // Approximate previous close
                 const positionValue = pos.shares * currentPrice;
                 const positionDailyPnL = pos.shares * quote.change;
                 
@@ -256,13 +244,10 @@ export default function DashboardPage() {
                 const conversionRate = pos.currency === "SAR" ? 1/3.75 : 1;
                 totalValue += positionValue * conversionRate;
                 dailyPnL += positionDailyPnL * conversionRate;
-                
-                return { ...pos, currentPrice };
               }
             } catch (error) {
               console.error(`Error fetching price for ${pos.symbol}:`, error);
             }
-            return pos;
           })
         );
         
@@ -298,7 +283,6 @@ export default function DashboardPage() {
     fetchTopMovers();
     fetchPortfolioSummary();
     
-    // Auto-refresh every 60 seconds
     const interval = setInterval(() => {
       fetchIndices();
       fetchTopMovers();
@@ -306,12 +290,7 @@ export default function DashboardPage() {
     }, 60000);
     
     return () => clearInterval(interval);
-  }, [fetchIndices, fetchChartData, fetchTopMovers, fetchPortfolioSummary]);
-
-  // Refetch chart when timeframe changes
-  useEffect(() => {
-    fetchChartData(timeframe, chartSymbol);
-  }, [timeframe, chartSymbol, fetchChartData]);
+  }, [fetchIndices, fetchChartData, fetchTopMovers, fetchPortfolioSummary, timeframe]);
 
   // Handle index click to change chart
   const handleIndexClick = (symbol: string) => {
