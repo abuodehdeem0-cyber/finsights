@@ -22,10 +22,7 @@ import { useLanguage } from "@/lib/language-context";
 
 // Navigation items using translations
 const getNavItems = (t: any) => ({
-  public: [
-    { name: t.nav.analysis, href: "/analysis", icon: TrendingUp },
-    { name: t.nav.sectors, href: "/sectors", icon: Grid3X3 },
-  ],
+  public: [],
   auth: [
     { name: t.nav.login, href: "/login", icon: LogIn },
     { name: t.nav.register, href: "/register", icon: UserPlus },

@@ -255,11 +255,11 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
           >
-            <span className="bg-gradient-to-r from-noir-gray via-noir-gray to-noir-gray-dark bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-noir-gray to-noir-gray bg-clip-text text-transparent">
               {t.landing?.hero?.title1 || "Trade Smarter"}
             </span>
             <br />
-            <span className="bg-gradient-to-r from-noir-crimson-light via-noir-crimson to-noir-crimson-glow bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-noir-crimson-light to-noir-crimson-light bg-clip-text text-transparent">
               {t.landing?.hero?.title2 || "With AI Precision"}
             </span>
           </motion.h1>
@@ -284,7 +284,11 @@ export default function LandingPage() {
               onSubmit={(e) => {
                 e.preventDefault();
                 if (searchSymbol.trim()) {
-                  router.push(`/${locale}/analysis?ticker=${searchSymbol.trim().toUpperCase()}`);
+                  if (user) {
+                    router.push(`/${locale}/analysis?ticker=${searchSymbol.trim().toUpperCase()}`);
+                  } else {
+                    router.push(`/${locale}/register`);
+                  }
                 }
               }} 
               className="relative group"
@@ -295,11 +299,11 @@ export default function LandingPage() {
                 value={searchSymbol}
                 onChange={(e) => setSearchSymbol(e.target.value)}
                 placeholder={t.analysis?.searchPlaceholder || "Search stocks (e.g., AAPL, 2222.SR)"}
-                className={`w-full ${isRTL ? 'pr-14 pl-44' : 'pl-14 pr-44'} py-5 rounded-2xl bg-noir-dark/80 border border-noir-crimson/30 text-noir-gray text-lg placeholder:text-noir-gray-darker focus:outline-none focus:border-noir-crimson-light focus:ring-1 focus:ring-noir-crimson-light/50 transition-all backdrop-blur-xl shadow-2xl shadow-noir-crimson/10`}
+                className={`w-full ${isRTL ? 'pr-14 pl-44' : 'pl-14 pr-44'} py-5 rounded-2xl bg-noir-dark/80 border border-noir-crimson/30 text-noir-gray text-lg placeholder:text-noir-gray-darker focus:outline-none focus:border-noir-crimson-light focus:ring-1 focus:ring-noir-crimson-light/50 transition-all backdrop-blur-xl`}
               />
               <button
                 type="submit"
-                className={`absolute ${isRTL ? 'left-2' : 'right-2'} top-2 bottom-2 px-8 bg-gradient-to-r from-noir-crimson to-noir-crimson-light rounded-xl font-bold text-noir-gray hover:shadow-lg hover:shadow-noir-crimson/20 transition-all flex items-center gap-2`}
+                className={`absolute ${isRTL ? 'left-2' : 'right-2'} top-2 bottom-2 px-8 bg-gradient-to-r from-noir-crimson to-noir-crimson-light rounded-xl font-bold text-noir-gray transition-all flex items-center gap-2`}
               >
                 <Brain className="w-5 h-5" />
                 <span>{t.analysis?.analyzeButton || "Analyze"}</span>
@@ -315,13 +319,13 @@ export default function LandingPage() {
           >
             <Link
               href={user ? `/${locale}/dashboard` : `/${locale}/register`}
-              className="group relative px-8 py-4 bg-gradient-to-r from-noir-crimson to-noir-crimson-light rounded-xl font-semibold text-noir-gray overflow-hidden interactive-glow"
+              className="group relative px-8 py-4 bg-gradient-to-r from-noir-crimson to-noir-crimson-light rounded-xl font-semibold text-noir-gray overflow-hidden"
             >
               <span className="relative z-10 flex items-center">
                 {user ? (t.landing?.cta?.dashboard || "Enter Dashboard") : (t.landing?.cta?.getStarted || "Get Started Free")}
                 <ArrowRight className={`w-5 h-5 ${isRTL ? 'mr-2 rotate-180' : 'ml-2'} group-hover:translate-x-1 transition-transform`} />
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-noir-crimson-light to-noir-crimson-glow opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-r from-noir-crimson-light to-noir-crimson opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
             
             {!user && (
@@ -581,7 +585,7 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <Link
-                  href={`/${locale}/sectors`}
+                  href={user ? `/${locale}/sectors` : `/${locale}/register`}
                   className="mt-6 inline-flex items-center text-noir-crimson-light hover:text-noir-gray transition-colors"
                 >
                   {t.landing?.markets?.explore || "Explore Sectors"}
@@ -624,7 +628,7 @@ export default function LandingPage() {
                   ))}
                 </ul>
                 <Link
-                  href={`/${locale}/analysis`}
+                  href={user ? `/${locale}/analysis` : `/${locale}/register`}
                   className="mt-6 inline-flex items-center text-noir-crimson-light hover:text-noir-gray transition-colors"
                 >
                   {t.landing?.markets?.analyze || "Analyze Stocks"}
@@ -703,7 +707,7 @@ export default function LandingPage() {
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                   <Link
                     href={user ? `/${locale}/dashboard` : `/${locale}/register`}
-                    className="px-8 py-4 bg-gradient-to-r from-noir-crimson to-noir-crimson-light rounded-xl font-semibold text-noir-gray interactive-glow hover:shadow-lg hover:shadow-noir-crimson/30 transition-all"
+                    className="px-8 py-4 bg-gradient-to-r from-noir-crimson to-noir-crimson-light rounded-xl font-semibold text-noir-gray transition-all"
                   >
                     {user ? (t.landing?.cta?.goToDashboard || "Go to Dashboard") : (t.landing?.cta?.startFree || "Start Free Trial")}
                   </Link>
@@ -730,9 +734,9 @@ export default function LandingPage() {
             <div>
               <h4 className="text-noir-gray font-semibold mb-4">{t.landing?.footer?.product || "Product"}</h4>
               <ul className="space-y-2">
-                <li><Link href={`/${locale}/analysis`} className="text-noir-gray-dark hover:text-noir-gray transition-colors">{t.nav.analysis}</Link></li>
-                <li><Link href={`/${locale}/sectors`} className="text-noir-gray-dark hover:text-noir-gray transition-colors">{t.nav.sectors}</Link></li>
-                <li><Link href={`/${locale}/portfolio`} className="text-noir-gray-dark hover:text-noir-gray transition-colors">{t.nav.portfolio}</Link></li>
+                <li><Link href={user ? `/${locale}/analysis` : `/${locale}/register`} className="text-noir-gray-dark hover:text-noir-gray transition-colors">{t.nav.analysis}</Link></li>
+                <li><Link href={user ? `/${locale}/sectors` : `/${locale}/register`} className="text-noir-gray-dark hover:text-noir-gray transition-colors">{t.nav.sectors}</Link></li>
+                <li><Link href={user ? `/${locale}/portfolio` : `/${locale}/register`} className="text-noir-gray-dark hover:text-noir-gray transition-colors">{t.nav.portfolio}</Link></li>
               </ul>
             </div>
             <div>

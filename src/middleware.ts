@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 
 // Protected routes that require authentication
-const protectedRoutes = ["/portfolio", "/dashboard"];
+const protectedRoutes = ["/portfolio", "/dashboard", "/analysis", "/sectors"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -42,13 +42,11 @@ export function middleware(request: NextRequest) {
       hasToken,
       hasSession,
       hasSecureSession,
-      isAuthenticated,
-      tokenLength: token?.length || 0,
-      tokenValue: token ? token.substring(0, 20) + "..." : "none"
+      isAuthenticated
     });
     
     // DEBUG MODE: Allow access even without token to debug data fetching
-    const DEBUG_MODE = true; // Set to false to enforce auth
+    const DEBUG_MODE = false; // Set to false to enforce auth
     
     if (!isAuthenticated && !DEBUG_MODE) {
       console.log(`[Middleware] No valid session found, redirecting to login`);
