@@ -394,6 +394,125 @@ export const translations = {
       macd: "MACD",
       bollinger: "Bollinger Bands",
     },
+
+    // Landing Page
+    landing: {
+      badge: "Next-Gen Financial Intelligence",
+      hero: {
+        title1: "Trade Smarter",
+        title2: "With AI Precision",
+        subtitle: "Premium financial terminal with AI-powered investment signals, real-time market data, and dual-currency portfolio tracking for the modern trader.",
+      },
+      cta: {
+        getStarted: "Get Started Free",
+        dashboard: "Enter Dashboard",
+        demo: "Try AI Analysis",
+        goToDashboard: "Go to Dashboard",
+        startFree: "Start Free Trial",
+        signIn: "Sign In",
+        title: "Ready to Trade Smarter?",
+        subtitle: "Join thousands of traders who have elevated their investment strategy with FinSight AI.",
+      },
+      trust: {
+        noCard: "No credit card required",
+        freeTier: "Free tier available",
+        cancel: "Cancel anytime",
+      },
+      stats: {
+        accuracy: "Signal Accuracy",
+        markets: "Global Markets",
+        users: "Active Traders",
+        support: "AI Support",
+      },
+      features: {
+        title: "Everything You Need",
+        subtitle: "Professional-grade tools powered by artificial intelligence for modern investors.",
+        aiSignals: {
+          title: "AI-Powered Signals",
+          desc: "Advanced machine learning algorithms analyze market patterns to generate precise BUY/SELL/HOLD recommendations with confidence scores.",
+        },
+        dualCurrency: {
+          title: "Dual Currency Support",
+          desc: "Seamless USD/SAR currency handling with real-time conversion. Track investments in your preferred currency with native Saudi market support.",
+        },
+        riskManagement: {
+          title: "Risk Quantization",
+          desc: "Comprehensive risk assessment with volatility factors, market correlation analysis, and personalized risk tolerance matching.",
+        },
+        realTime: {
+          title: "Real-Time Intelligence",
+          desc: "Live market data from global exchanges with millisecond-level updates. Never miss an opportunity with instant alerts.",
+        },
+        portfolio: {
+          title: "Smart Portfolio",
+          desc: "Track, analyze, and optimize your holdings with AI-driven insights. Visualize allocation, performance, and drift from target weights.",
+        },
+        sectorAnalysis: {
+          title: "Sector Intelligence",
+          desc: "Industry heatmaps and sentiment indicators. Identify trending sectors before the crowd with predictive analytics.",
+        },
+      },
+      howItWorks: {
+        title: "How It Works",
+        subtitle: "Start trading smarter in three simple steps.",
+        step1: {
+          title: "Create Account",
+          desc: "Sign up in seconds. Secure authentication with encrypted data protection.",
+        },
+        step2: {
+          title: "Get AI Signals",
+          desc: "Receive real-time BUY/SELL/HOLD recommendations with confidence scores and risk analysis.",
+        },
+        step3: {
+          title: "Trade & Track",
+          desc: "Execute trades and monitor your portfolio performance with advanced analytics.",
+        },
+      },
+      markets: {
+        title: "Global Market Coverage",
+        subtitle: "Access major exchanges worldwide with real-time data and AI-powered insights.",
+        saudi: {
+          title: "Saudi Market (TADAWUL)",
+          subtitle: "Native SAR support with local stock coverage",
+          features: [
+            "All TADAWUL listed stocks",
+            "Real-time TASI index tracking",
+            "Saudi Aramco, SABIC, Al Rajhi Bank",
+            "SAR-native portfolio tracking",
+          ],
+        },
+        us: {
+          title: "US Markets",
+          subtitle: "NYSE & NASDAQ coverage",
+          features: [
+            "NYSE & NASDAQ stocks",
+            "S&P 500, NASDAQ, DOW indices",
+            "Major tech and blue-chip stocks",
+            "USD portfolio tracking with SAR conversion",
+          ],
+        },
+        explore: "Explore Sectors",
+        analyze: "Analyze Stocks",
+      },
+      security: {
+        title: "Enterprise-Grade Security",
+        subtitle: "Your data is protected with the same security standards used by major financial institutions.",
+        encryption: "256-bit Encryption",
+        uptime: "99.9% Uptime",
+        compliance: "SOC 2 Compliant",
+        monitoring: "24/7 Monitoring",
+      },
+      footer: {
+        product: "Product",
+        account: "Account",
+        support: "Support",
+        legal: "Legal",
+        privacy: "Privacy Policy",
+        terms: "Terms of Service",
+        rights: "All rights reserved.",
+        disclaimer: "For educational purposes only. Not financial advice.",
+      },
+    },
   },
 
   ar: {
@@ -786,6 +905,125 @@ export const translations = {
       rsi: "مؤشر القوة النسبية",
       macd: "MACD",
       bollinger: "نطاقات بولينجر",
+    },
+
+    // Landing Page
+    landing: {
+      badge: "الذكاء المالي الجيل القادم",
+      hero: {
+        title1: "تداول بذكاء",
+        title2: "بدقة الذكاء الاصطناعي",
+        subtitle: "منصة مالية متقدمة مع إشارات استثمار مدعومة بالذكاء الاصطناعي، بيانات السوق الفورية، وتتبع المحفظة بالعملة المزدوجة للمتداول الحديث.",
+      },
+      cta: {
+        getStarted: "ابدأ مجاناً",
+        dashboard: "دخول لوحة التحكم",
+        demo: "جرب التحليل الذكي",
+        goToDashboard: "اذهب إلى لوحة التحكم",
+        startFree: "ابدأ الفترة التجريبية المجانية",
+        signIn: "تسجيل الدخول",
+        title: "مستعد للتداول بذكاء؟",
+        subtitle: "انضم إلى آلاف المتداولين الذين ارتقوا باستراتيجيتهم الاستثمارية مع FinSight AI.",
+      },
+      trust: {
+        noCard: "لا يتطلب بطاقة ائتمان",
+        freeTier: "النسخة المجانية متاحة",
+        cancel: "إلغاء في أي وقت",
+      },
+      stats: {
+        accuracy: "دقة الإشارات",
+        markets: "الأسواق العالمية",
+        users: "متداول نشط",
+        support: "دعم الذكاء الاصطناعي",
+      },
+      features: {
+        title: "كل ما تحتاجه",
+        subtitle: "أدوات احترافية مدعومة بالذكاء الاصطناعي للمستثمرين الحديثين.",
+        aiSignals: {
+          title: "إشارات مدعومة بالذكاء الاصطناعي",
+          desc: "تحليلات تعلم الآلة المتقدمة تحلل أنماط السوق لتوليد توصيات شراء/بيع/انتظار دقيقة مع درجات الثقة.",
+        },
+        dualCurrency: {
+          title: "دعم العملة المزدوجة",
+          desc: "معالجة USD/SAR سلسة مع تحويل فوري. تتبع استثماراتك بالعملة المفضلة مع دعم السوق السعودي الأصلي.",
+        },
+        riskManagement: {
+          title: "قياس المخاطر",
+          desc: "تقييم شامل للمخاطر مع عوامل التذبذب، تحليل الارتباط السوقي، ومطابقة تحمل المخاطر الشخصية.",
+        },
+        realTime: {
+          title: "الذكاء الفوري",
+          desc: "بيانات السوق المباشرة من البورصات العالمية بتحديثات على مستوى الميلي ثانية. لا تفوت أي فرصة مع التنبيهات الفورية.",
+        },
+        portfolio: {
+          title: "محفظة ذكية",
+          desc: "تتبع، حلل، وحسن محتویاتك مع رؤى مدفوعة بالذكاء الاصطناعي. تصور التخصيص، الأداء، والانحراف عن الأوزان المستهدفة.",
+        },
+        sectorAnalysis: {
+          title: "ذكاء القطاعات",
+          desc: "خرائط حرارة الصناعات ومؤشرات المشاعر. حدد القطاعات المتجهة قبل الحشد باستخدام التحليلات التنبؤية.",
+        },
+      },
+      howItWorks: {
+        title: "كيف يعمل",
+        subtitle: "ابدأ التداول بذكاء في ثلاث خطوات بسيطة.",
+        step1: {
+          title: "إنشاء حساب",
+          desc: "سجل في ثوانٍ. مصادقة آمنة مع حماية البيانات المشفرة.",
+        },
+        step2: {
+          title: "احصل على إشارات الذكاء الاصطناعي",
+          desc: "استلم توصيات شراء/بيع/انتظار فورية مع درجات الثقة وتحليل المخاطر.",
+        },
+        step3: {
+          title: "تداول وتتبع",
+          desc: "نفذ الصفقات وراقب أداء محفظتك مع التحليلات المتقدمة.",
+        },
+      },
+      markets: {
+        title: "تغطية السوق العالمية",
+        subtitle: "الوصول إلى البورصات الرئيسية حول العالم مع بيانات فورية ورؤى مدعومة بالذكاء الاصطناعي.",
+        saudi: {
+          title: "السوق السعودي (تداول)",
+          subtitle: "دعم الريال الأصلي مع تغطية الأسهم المحلية",
+          features: [
+            "جميع الأسهم المدرجة في تداول",
+            "تتبع مؤشر تاسي الفوري",
+            "أرامكو، سابك، مصرف الراجحي",
+            "تتبع المحفظة الأصلي بالريال",
+          ],
+        },
+        us: {
+          title: "الأسواق الأمريكية",
+          subtitle: "تغطية نيويورك وناسداك",
+          features: [
+            "أسهم نيويورك وناسداك",
+            "مؤشرات S&P 500 وناسداك وداو",
+            "الأسهم التقنية الكبرى والأزرق الرقاقي",
+            "تتبع المحفظة بالدولار مع تحويل للريال",
+          ],
+        },
+        explore: "استكشف القطاعات",
+        analyze: "حلل الأسهم",
+      },
+      security: {
+        title: "أمان على مستوى المؤسسات",
+        subtitle: "بياناتك محمية بنفس معايير الأمان المستخدمة من المؤسسات المالية الكبرى.",
+        encryption: "تشفير 256-bit",
+        uptime: "99.9% وقت التشغيل",
+        compliance: "متوافق مع SOC 2",
+        monitoring: "مراقبة 24/7",
+      },
+      footer: {
+        product: "المنتج",
+        account: "الحساب",
+        support: "الدعم",
+        legal: "قانوني",
+        privacy: "سياسة الخصوصية",
+        terms: "شروط الخدمة",
+        rights: "جميع الحقوق محفوظة.",
+        disclaimer: "لأغراض تعليمية فقط. ليس نصيحة مالية.",
+      },
     },
   },
 };

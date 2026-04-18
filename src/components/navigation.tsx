@@ -23,7 +23,6 @@ import { useLanguage } from "@/lib/language-context";
 // Navigation items using translations
 const getNavItems = (t: any) => ({
   public: [
-    { name: t.nav.dashboard, href: "/", icon: LayoutDashboard },
     { name: t.nav.analysis, href: "/analysis", icon: TrendingUp },
     { name: t.nav.sectors, href: "/sectors", icon: Grid3X3 },
   ],
@@ -32,7 +31,7 @@ const getNavItems = (t: any) => ({
     { name: t.nav.register, href: "/register", icon: UserPlus },
   ],
   private: [
-    { name: t.nav.dashboard, href: "/", icon: LayoutDashboard },
+    { name: t.nav.dashboard, href: "/dashboard", icon: LayoutDashboard },
     { name: t.nav.analysis, href: "/analysis", icon: TrendingUp },
     { name: t.nav.portfolio, href: "/portfolio", icon: PieChart },
     { name: t.nav.sectors, href: "/sectors", icon: Grid3X3 },
@@ -55,7 +54,7 @@ export function Navigation() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center">
+          <Link href={`/${locale}`} className="flex items-center">
             <Logo variant="chart" size="md" showText={true} />
           </Link>
 
