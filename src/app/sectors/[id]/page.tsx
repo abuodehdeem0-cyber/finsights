@@ -19,10 +19,10 @@ import {
   Landmark,
   Truck,
   GraduationCap,
-  DollarSign,
 } from "lucide-react";
 import { GlassCard } from "@/components/ui/glass-card";
 import Link from "next/link";
+import { useLanguage } from "@/lib/language-context";
 
 interface StockData {
   symbol: string;
@@ -36,62 +36,15 @@ interface StockData {
   aiLogic: string;
 }
 
-interface SectorInfo {
-  id: string;
-  name: string;
-  icon: React.ElementType;
-  description: string;
-}
-
-const sectorMap: Record<string, SectorInfo> = {
-  energy: {
-    id: "energy",
-    name: "Energy",
-    icon: Zap,
-    description: "Oil, gas, and renewable energy companies",
-  },
-  technology: {
-    id: "technology",
-    name: "Technology",
-    icon: Cpu,
-    description: "Tech giants and semiconductor leaders",
-  },
-  finance: {
-    id: "finance",
-    name: "Finance",
-    icon: Landmark,
-    description: "Banks, investment firms, and financial services",
-  },
-  healthcare: {
-    id: "healthcare",
-    name: "Healthcare",
-    icon: Stethoscope,
-    description: "Pharmaceuticals, biotech, and medical services",
-  },
-  consumer: {
-    id: "consumer",
-    name: "Consumer",
-    icon: ShoppingCart,
-    description: "Retail, e-commerce, and consumer goods",
-  },
-  industrial: {
-    id: "industrial",
-    name: "Industrial",
-    icon: Truck,
-    description: "Manufacturing, logistics, and heavy industry",
-  },
-  realestate: {
-    id: "realestate",
-    name: "Real Estate",
-    icon: Building2,
-    description: "REITs and property investment",
-  },
-  education: {
-    id: "education",
-    name: "Education",
-    icon: GraduationCap,
-    description: "EdTech and learning platforms",
-  },
+const sectorIcons: Record<string, React.ElementType> = {
+  energy: Zap,
+  technology: Cpu,
+  finance: Landmark,
+  healthcare: Stethoscope,
+  consumer: ShoppingCart,
+  industrial: Truck,
+  realestate: Building2,
+  education: GraduationCap,
 };
 
 const containerVariants = {
@@ -114,16 +67,21 @@ const itemVariants = {
 export default function SectorDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { t, isRTL, locale } = useLanguage();
   const sectorId = params.id as string;
   
   const [stocks, setStocks] = useState<StockData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const sector = sectorMap[sectorId];
+  // @ts-expect-error - dynamic sector key lookup
+  const sectorName = t.sectors?.[sectorId];
+  // @ts-expect-error - dynamic sector key lookup
+  const sectorDescription = t.sectors?.descriptions?.[sectorId];
+  const SectorIcon = sectorIcons[sectorId];
 
   useEffect(() => {
-    if (!sector) return;
+    if (!sectorName) return;
 
     async function fetchSectorData() {
       try {
@@ -137,31 +95,29 @@ export default function SectorDetailPage() {
         const data = await response.json();
         setStocks(data.stocks);
       } catch (err) {
-        setError("Failed to load sector data. Please try again.");
+        setError(t.analysis?.errors?.fetchFailed || "Failed to load sector data. Please try again.");
       } finally {
         setLoading(false);
       }
     }
 
     fetchSectorData();
-  }, [sectorId, sector]);
+  }, [sectorId, sectorName, t.analysis?.errors?.fetchFailed]);
 
-  if (!sector) {
+  if (!sectorName || (!loading && !SectorIcon)) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8">
         <GlassCard className="p-8 text-center">
           <h1 className="text-2xl font-bold text-noir-gray mb-4">
-            Sector Not Found
+            {t.sectorHub?.sectorNotFound || "Sector Not Found"}
           </h1>
-          <Link href="/sectors" className="text-noir-crimson-light hover:underline">
-            Back to Sector Hub
+          <Link href={`/${locale}/sectors`} className="text-noir-crimson-light hover:underline">
+            {t.sectorHub?.backToHub || "Back to Sector Hub"}
           </Link>
         </GlassCard>
       </div>
     );
   }
-
-  const SectorIcon = sector.icon;
 
   const getVerdictColor = (verdict: string) => {
     switch (verdict) {
@@ -175,9 +131,9 @@ export default function SectorDetailPage() {
   };
 
   const getTrendIcon = (change: number) => {
-    if (change > 0) return <TrendingUp className="w-4 h-4 text-signal-buy" />;
-    if (change < 0) return <TrendingDown className="w-4 h-4 text-signal-sell" />;
-    return <Minus className="w-4 h-4 text-signal-hold" />;
+    if (change > 0) return <TrendingUp className={`w-4 h-4 text-signal-buy ${isRTL ? 'ml-1' : 'mr-1'}`} />;
+    if (change < 0) return <TrendingDown className={`w-4 h-4 text-signal-sell ${isRTL ? 'ml-1' : 'mr-1'}`} />;
+    return <Minus className={`w-4 h-4 text-signal-hold ${isRTL ? 'ml-1' : 'mr-1'}`} />;
   };
 
   return (
@@ -186,24 +142,25 @@ export default function SectorDetailPage() {
       initial="hidden"
       animate="visible"
       className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+      key={locale} // Re-animate on locale change
     >
       {/* Header */}
       <motion.div variants={itemVariants} className="mb-8">
         <Link
-          href="/sectors"
-          className="inline-flex items-center text-noir-gray-dark hover:text-noir-gray mb-4 transition-colors"
+          href={`/${locale}/sectors`}
+          className={`inline-flex items-center text-noir-gray-dark hover:text-noir-gray mb-4 transition-colors ${isRTL ? 'flex-row-reverse' : ''}`}
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Sectors
+          <ArrowLeft className={`w-4 h-4 ${isRTL ? 'ml-2 rotate-180' : 'mr-2'}`} />
+          {t.sectorHub?.backToSectors || "Back to Sectors"}
         </Link>
         
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-noir-crimson to-noir-crimsonLight flex items-center justify-center glow-crimson">
+        <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-noir-crimson to-noir-crimson-light flex items-center justify-center glow-crimson flex-shrink-0">
             <SectorIcon className="w-8 h-8 text-noir-gray" />
           </div>
-          <div>
-            <h1 className="text-3xl font-bold text-noir-gray">{sector.name}</h1>
-            <p className="text-noir-gray-dark">{sector.description}</p>
+          <div className={isRTL ? 'text-right' : 'text-left'}>
+            <h1 className="text-3xl font-bold text-noir-gray">{sectorName}</h1>
+            <p className="text-noir-gray-dark">{sectorDescription}</p>
           </div>
         </div>
       </motion.div>
@@ -214,9 +171,9 @@ export default function SectorDetailPage() {
           <GlassCard className="p-8">
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="w-12 h-12 text-noir-crimson animate-spin mb-4" />
-              <p className="text-noir-gray-dark">Loading sector data...</p>
-              <p className="text-sm text-noir-gray-dark/60 mt-2">
-                Fetching real-time prices and AI analysis
+              <p className="text-noir-gray-dark">{t.sectorHub?.loadingSectorData || "Loading..."}</p>
+              <p className="text-sm text-noir-gray-dark/60 mt-2 text-center">
+                {t.sectorHub?.fetchingRealTime || "Fetching real-time data..."}
               </p>
             </div>
           </GlassCard>
@@ -226,7 +183,7 @@ export default function SectorDetailPage() {
       {/* Error State */}
       {error && !loading && (
         <motion.div variants={itemVariants}>
-          <GlassCard className="p-6 border-signal-sell/50">
+          <GlassCard className="p-6 border-signal-sell/50 text-center">
             <p className="text-signal-sell">{error}</p>
           </GlassCard>
         </motion.div>
@@ -237,8 +194,8 @@ export default function SectorDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {stocks.map((stock) => (
             <motion.div key={stock.symbol} variants={itemVariants}>
-              <GlassCard className="p-5 hover:border-noir-crimson/50 transition-all">
-                <div className="flex items-start justify-between mb-4">
+              <GlassCard className="p-5 hover:border-noir-crimson/50 transition-all h-full flex flex-col">
+                <div className={`flex items-start justify-between mb-4 ${isRTL ? 'flex-row-reverse text-right' : 'text-left'}`}>
                   <div>
                     <h3 className="text-lg font-semibold text-noir-gray">
                       {stock.name}
@@ -247,8 +204,8 @@ export default function SectorDetailPage() {
                       {stock.symbol}
                     </span>
                   </div>
-                  <div className="text-right">
-                    <div className="flex items-center gap-2">
+                  <div className={isRTL ? 'text-left' : 'text-right'}>
+                    <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                       {getTrendIcon(stock.change)}
                       <span
                         className={
@@ -262,27 +219,29 @@ export default function SectorDetailPage() {
                       </span>
                     </div>
                     <span className="text-sm text-noir-gray-dark">
-                      {stock.currency === "SAR" ? "ر.س " : "$"}
+                      {stock.currency === "SAR" ? (isRTL ? "ر.س " : "SAR ") : "$"}
                       {stock.price.toFixed(2)}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between mb-4">
+                <div className={`flex items-center justify-between mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <span className="text-sm text-noir-gray-dark">
-                    Market Cap: {stock.marketCap}
+                    {(t.stock?.marketCap || "Market Cap")}: {stock.marketCap}
                   </span>
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-semibold border ${getVerdictColor(
                       stock.aiVerdict
                     )}`}
                   >
-                    {stock.aiVerdict}
+                    {stock.aiVerdict === "BUY" ? (t.intelligence?.buySignal || "BUY") :
+                     stock.aiVerdict === "SELL" ? (t.intelligence?.sellSignal || "SELL") :
+                     (t.intelligence?.holdSignal || "HOLD")}
                   </span>
                 </div>
 
-                <div className="border-t border-noir-crimson/20 pt-4 mb-4">
-                  <div className="flex items-start gap-2">
+                <div className="border-t border-noir-crimson/20 pt-4 mb-4 mt-auto">
+                  <div className={`flex items-start gap-2 ${isRTL ? 'flex-row-reverse text-right' : 'text-left'}`}>
                     <Sparkles className="w-4 h-4 text-noir-crimson-light flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-noir-gray-dark italic">
                       &ldquo;{stock.aiLogic}&rdquo;
@@ -291,11 +250,11 @@ export default function SectorDetailPage() {
                 </div>
 
                 <Link
-                  href={`/analysis?ticker=${encodeURIComponent(stock.symbol)}`}
-                  className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-noir-crimson/20 hover:bg-noir-crimson/30 text-noir-crimson-light transition-colors text-sm font-medium"
+                  href={`/${locale}/analysis?ticker=${encodeURIComponent(stock.symbol)}`}
+                  className={`w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-noir-crimson/20 hover:bg-noir-crimson/30 text-noir-crimson-light transition-colors text-sm font-medium ${isRTL ? 'flex-row-reverse' : ''}`}
                 >
                   <Search className="w-4 h-4" />
-                  Analyze Deeply
+                  {t.sectorHub?.analyzeDeeply || "Analyze Deeply"}
                 </Link>
               </GlassCard>
             </motion.div>

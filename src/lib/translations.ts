@@ -60,6 +60,16 @@ export const translations = {
       education: "Education",
       saudiMarket: "Saudi Market",
       usMarket: "US Market",
+      descriptions: {
+        energy: "Oil, gas, and renewable energy companies",
+        technology: "Tech giants and semiconductor leaders",
+        finance: "Banks, investment firms, and financial services",
+        healthcare: "Pharmaceuticals, biotech, and medical services",
+        consumer: "Retail, e-commerce, and consumer goods",
+        industrial: "Manufacturing, logistics, and heavy industry",
+        realestate: "REITs and property investment",
+        education: "EdTech and learning platforms",
+      },
     },
 
     // Market Intelligence
@@ -343,6 +353,12 @@ export const translations = {
       laggingSectors: "Lagging Sectors",
       marketBreadth: "Market Breadth",
       advancingVsDeclining: "Advancing vs Declining",
+      backToSectors: "Back to Sectors",
+      analyzeDeeply: "Analyze Deeply",
+      sectorNotFound: "Sector Not Found",
+      backToHub: "Back to Sector Hub",
+      loadingSectorData: "Loading sector data...",
+      fetchingRealTime: "Fetching real-time prices and AI analysis",
     },
 
     // Dashboard
@@ -437,6 +453,16 @@ export const translations = {
       education: "التعليم",
       saudiMarket: "السوق السعودي",
       usMarket: "السوق الأمريكي",
+      descriptions: {
+        energy: "شركات النفط والغاز والطاقة المتجددة",
+        technology: "عمالقة التكنولوجيا وقادة أشباه الموصلات",
+        finance: "البنوك وشركات الاستثمار والخدمات المالية",
+        healthcare: "الصيدلة والتكنولوجيا الحيوية والخدمات الطبية",
+        consumer: "التجزئة والتجارة الإلكترونية والسلع الاستهلاكية",
+        industrial: "التصنيع والخدمات اللوجستية والصناعات الثقيلة",
+        realestate: "صناديق الاستثمار العقاري والاستثمار العقاري",
+        education: "تكنولوجيا التعليم ومنصات التعلم",
+      },
     },
 
     // Market Intelligence
@@ -720,6 +746,12 @@ export const translations = {
       laggingSectors: "القطاعات المتأخرة",
       marketBreadth: "انتشار السوق",
       advancingVsDeclining: "الصاعدة مقابل الهابطة",
+      backToSectors: "العودة للقطاعات",
+      analyzeDeeply: "تحليل معمق",
+      sectorNotFound: "القطاع غير موجود",
+      backToHub: "العودة لمركز القطاعات",
+      loadingSectorData: "جاري تحميل بيانات القطاع...",
+      fetchingRealTime: "جلب الأسعار الفورية وتحليل الذكاء الاصطناعي",
     },
 
     // Dashboard
