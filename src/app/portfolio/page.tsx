@@ -304,20 +304,20 @@ export default function PortfolioPage() {
             // Get AI recommendation
             const pnl = (currentPrice - pos.avgPrice) / pos.avgPrice * 100;
             let aiVerdict: "BUY" | "SELL" | "HOLD" = "HOLD";
-            let aiLogic = "Neutral market signals";
+            let aiLogic = t.portfolio?.aiReasoning?.neutral || "Neutral market signals";
             
             if (pnl > 10) {
               aiVerdict = "SELL";
-              aiLogic = "Take profits on strong gains";
+              aiLogic = t.portfolio?.aiReasoning?.takeProfits || "Take profits on strong gains";
             } else if (pnl < -15) {
               aiVerdict = "BUY";
-              aiLogic = "Average down on oversold conditions";
+              aiLogic = t.portfolio?.aiReasoning?.averageDown || "Average down on oversold conditions";
             } else if (pnl > 0 && changePercent > 0) {
               aiVerdict = "HOLD";
-              aiLogic = "Momentum positive, maintain position";
+              aiLogic = t.portfolio?.aiReasoning?.momentumPositive || "Momentum positive, maintain position";
             } else if (pnl < 0 && changePercent < 0) {
               aiVerdict = "HOLD";
-              aiLogic = "Avoid panic selling during weakness";
+              aiLogic = t.portfolio?.aiReasoning?.avoidPanic || "Avoid panic selling during weakness";
             }
             
             return {
@@ -346,7 +346,7 @@ export default function PortfolioPage() {
               changePercent: 0,
               currency: pos.currency as "USD" | "SAR",
               aiVerdict: "HOLD",
-              aiLogic: "Data unavailable",
+              aiLogic: t.portfolio?.aiReasoning?.dataUnavailable || "Data unavailable",
             };
           }
         })
@@ -840,7 +840,7 @@ export default function PortfolioPage() {
                              holding.aiVerdict === "HOLD" ? t.intelligence?.holdSignal || "HOLD" :
                              holding.aiVerdict}
                           </span>
-                          <span className="text-xs text-noir-gray-dark max-w-[120px] truncate" title={holding.aiLogic}>
+                          <span className={`text-xs text-noir-gray-dark max-w-[120px] truncate ${isRTL ? 'text-right' : 'text-left'}`} title={holding.aiLogic}>
                             {holding.aiLogic}
                           </span>
                         </div>
@@ -888,7 +888,6 @@ export default function PortfolioPage() {
           </div>
           </GlassCard>
         </motion.div>
-// ... (rest of the code remains the same)
       </motion.div>
 
       {/* Add Position Modal */}

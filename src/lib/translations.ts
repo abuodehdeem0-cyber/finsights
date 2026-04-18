@@ -138,6 +138,14 @@ export const translations = {
       value: "Value",
       dayChange: "Day Change",
       actions: "Actions",
+      aiReasoning: {
+        takeProfits: "Take profits on strong gains",
+        averageDown: "Average down on oversold conditions",
+        momentumPositive: "Momentum positive, maintain position",
+        avoidPanic: "Avoid panic selling during weakness",
+        neutral: "Neutral market signals",
+        dataUnavailable: "Data unavailable",
+      },
     },
 
     // Analysis
@@ -507,6 +515,14 @@ export const translations = {
       value: "القيمة",
       dayChange: "التغير اليومي",
       actions: "إجراءات",
+      aiReasoning: {
+        takeProfits: "جني الأرباح على المكاسب القوية",
+        averageDown: "خفض تكلفة الشراء في مناطق ذروة البيع",
+        momentumPositive: "زخم إيجابي، احتفظ بالمركز",
+        avoidPanic: "تجنب البيع المذعور أثناء تراجع السوق",
+        neutral: "إشارات سوق محايدة",
+        dataUnavailable: "البيانات غير متاحة",
+      },
     },
 
     // Analysis
