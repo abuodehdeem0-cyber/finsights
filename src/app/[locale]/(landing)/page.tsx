@@ -255,11 +255,11 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
           >
-            <span className="bg-gradient-to-r from-noir-gray to-noir-gray bg-clip-text text-transparent">
+            <span className="text-noir-gray">
               {t.landing?.hero?.title1 || "Trade Smarter"}
             </span>
             <br />
-            <span className="bg-gradient-to-r from-noir-crimson-light to-noir-crimson-light bg-clip-text text-transparent">
+            <span className="text-noir-crimson-light">
               {t.landing?.hero?.title2 || "With AI Precision"}
             </span>
           </motion.h1>
@@ -402,7 +402,7 @@ export default function LandingPage() {
                   viewport={{ once: true }}
                   className="text-center"
                 >
-                  <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-noir-gray to-noir-crimson-light bg-clip-text text-transparent mb-2">
+                  <div className="text-4xl md:text-5xl font-bold text-noir-gray mb-2">
                     <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                   </div>
                   <div className="text-noir-gray-dark text-sm">{stat.label}</div>
@@ -423,7 +423,7 @@ export default function LandingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-noir-gray to-noir-crimson-light bg-clip-text text-transparent">
+              <span className="text-noir-gray">
                 {t.landing?.features?.title || "Everything You Need"}
               </span>
             </h2>
@@ -468,7 +468,7 @@ export default function LandingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-noir-gray to-noir-crimson-light bg-clip-text text-transparent">
+              <span className="text-noir-gray">
                 {t.landing?.howItWorks?.title || "How It Works"}
               </span>
             </h2>
@@ -541,7 +541,7 @@ export default function LandingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-noir-gray to-noir-crimson-light bg-clip-text text-transparent">
+              <span className="text-noir-gray">
                 {t.landing?.markets?.title || "Global Market Coverage"}
               </span>
             </h2>
@@ -650,7 +650,7 @@ export default function LandingPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-noir-gray to-noir-crimson-light bg-clip-text text-transparent">
+              <span className="text-noir-gray">
                 {t.landing?.security?.title || "Enterprise-Grade Security"}
               </span>
             </h2>
@@ -696,7 +696,7 @@ export default function LandingPage() {
               
               <div className="relative z-10">
                 <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                  <span className="bg-gradient-to-r from-noir-gray to-noir-crimson-light bg-clip-text text-transparent">
+                  <span className="text-noir-gray">
                     {t.landing?.cta?.title || "Ready to Trade Smarter?"}
                   </span>
                 </h2>
