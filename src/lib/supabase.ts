@@ -6,11 +6,8 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 // Client-side Supabase client (uses anon key)
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// Server-side Supabase client (uses service role for admin operations)
+// Server-side Supabase client for AUTH VERIFICATION only (uses anon key + user JWT)
 export function createServerSupabaseClient(token?: string) {
-  const serviceRoleKey =
-    process.env.SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKey;
-    
   const options: any = {
     auth: {
       autoRefreshToken: false,
@@ -21,12 +18,33 @@ export function createServerSupabaseClient(token?: string) {
   if (token) {
     options.global = {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     };
   }
 
-  return createClient(supabaseUrl, serviceRoleKey, options);
+  // Use anon key — only for verifying tokens via supabase.auth.getUser()
+  return createClient(supabaseUrl, supabaseAnonKey, options);
+}
+
+// Admin Supabase client — uses SERVICE ROLE KEY, bypasses RLS entirely.
+// Use this AFTER you have verified the user's identity via getUserIdFromRequest().
+// NEVER expose this client to the browser.
+export function createAdminSupabaseClient() {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!serviceRoleKey) {
+    throw new Error(
+      "SUPABASE_SERVICE_ROLE_KEY is not set. Add it to your .env.local and Vercel environment variables."
+    );
+  }
+
+  return createClient(supabaseUrl, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
 }
 
 // Database types matching our schema

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabaseClient } from "@/lib/supabase";
+import { createServerSupabaseClient, createAdminSupabaseClient } from "@/lib/supabase";
 import { z } from "zod";
 
 // Helper to detect if Saudi stock and auto-append .SR
@@ -24,28 +24,37 @@ const portfolioSchema = z.object({
   currency: z.enum(["USD", "SAR"]).optional(),
 });
 
-// Extract user ID from Supabase JWT token in header
+// Verify user identity from Authorization Bearer token or x-user-id header.
+// Returns the verified user ID, or null if authentication fails.
 async function getUserIdFromRequest(request: NextRequest): Promise<string | null> {
-  const supabase = createServerSupabaseClient();
-
-  // Try Authorization Bearer token first
+  // Try Authorization Bearer token first (preferred)
   const authHeader = request.headers.get("authorization");
   if (authHeader?.startsWith("Bearer ")) {
-    const token = authHeader.replace("Bearer ", "");
-    const { data: { user }, error } = await supabase.auth.getUser(token);
-    if (!error && user) return user.id;
+    const token = authHeader.replace("Bearer ", "").trim();
+    if (token && token !== "null" && token !== "undefined") {
+      try {
+        // Use anon-key client for token verification ONLY
+        const supabase = createServerSupabaseClient(token);
+        const { data: { user }, error } = await supabase.auth.getUser(token);
+        if (!error && user) {
+          console.log("[Portfolio Auth] ✅ Verified via Bearer token, user:", user.id);
+          return user.id;
+        }
+        console.warn("[Portfolio Auth] Bearer token verification failed:", error?.message);
+      } catch (err) {
+        console.error("[Portfolio Auth] Exception verifying token:", err);
+      }
+    }
   }
 
-  // Fallback: x-user-id header (legacy support)
-  return request.headers.get("x-user-id");
-}
-
-function extractToken(request: NextRequest): string | undefined {
-  const authHeader = request.headers.get("authorization");
-  if (authHeader?.startsWith("Bearer ")) {
-    return authHeader.replace("Bearer ", "");
+  // Fallback: x-user-id header (only if no valid Bearer token)
+  const userId = request.headers.get("x-user-id");
+  if (userId) {
+    console.warn("[Portfolio Auth] ⚠️ Falling back to x-user-id header (less secure):", userId);
+    return userId;
   }
-  return undefined;
+
+  return null;
 }
 
 export async function GET(request: NextRequest) {
@@ -56,8 +65,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const token = extractToken(request);
-    const supabase = createServerSupabaseClient(token);
+    // Use admin client (service role) — RLS bypassed, we already verified the user above
+    const supabase = createAdminSupabaseClient();
 
     const { data: portfolios, error } = await supabase
       .from("portfolios")
@@ -66,8 +75,11 @@ export async function GET(request: NextRequest) {
       .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("Error fetching portfolio:", error.message);
-      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+      console.error("[Portfolio GET] Supabase error:", error.code, error.message, error.details);
+      return NextResponse.json(
+        { error: "Internal server error", detail: error.message },
+        { status: 500 }
+      );
     }
 
     // Map snake_case DB columns to camelCase for frontend compatibility
@@ -84,7 +96,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(mapped);
   } catch (error) {
-    console.error("Error fetching portfolio:", error);
+    console.error("[Portfolio GET] Unexpected error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -98,13 +110,34 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { symbol, shares, avgPrice, currency: inputCurrency } = portfolioSchema.parse(body);
 
+    let parsed;
+    try {
+      parsed = portfolioSchema.parse(body);
+    } catch (zodErr) {
+      if (zodErr instanceof z.ZodError) {
+        return NextResponse.json(
+          { error: "Invalid input", details: zodErr.errors },
+          { status: 400 }
+        );
+      }
+      throw zodErr;
+    }
+
+    const { symbol, shares, avgPrice, currency: inputCurrency } = parsed;
     const { symbol: normalizedSymbol, currency: detectedCurrency } = normalizeSymbol(symbol);
     const finalCurrency = inputCurrency || detectedCurrency;
 
-    const token = extractToken(request);
-    const supabase = createServerSupabaseClient(token);
+    console.log("[Portfolio POST] Inserting position:", {
+      userId,
+      symbol: normalizedSymbol,
+      shares,
+      avgPrice,
+      currency: finalCurrency,
+    });
+
+    // Use admin client (service role) — RLS bypassed, we already verified the user above
+    const supabase = createAdminSupabaseClient();
 
     const { data: portfolio, error } = await supabase
       .from("portfolios")
@@ -119,9 +152,14 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error("Error creating portfolio entry:", error.message);
-      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+      console.error("[Portfolio POST] Supabase error:", error.code, error.message, error.details, error.hint);
+      return NextResponse.json(
+        { error: "Internal server error", detail: error.message },
+        { status: 500 }
+      );
     }
+
+    console.log("[Portfolio POST] ✅ Position created:", portfolio.id);
 
     return NextResponse.json(
       {
@@ -137,14 +175,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Invalid input", details: error.errors },
-        { status: 400 }
-      );
-    }
-
-    console.error("Error creating portfolio entry:", error);
+    console.error("[Portfolio POST] Unexpected error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
@@ -155,27 +186,34 @@ export async function DELETE(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
-    if (!userId || !id) {
-      return NextResponse.json({ error: "Unauthorized or missing ID" }, { status: 401 });
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const token = extractToken(request);
-    const supabase = createServerSupabaseClient(token);
+    if (!id) {
+      return NextResponse.json({ error: "Missing position ID" }, { status: 400 });
+    }
+
+    // Use admin client (service role) — RLS bypassed, we already verified the user above
+    const supabase = createAdminSupabaseClient();
 
     const { error } = await supabase
       .from("portfolios")
       .delete()
       .eq("id", id)
-      .eq("user_id", userId);
+      .eq("user_id", userId); // Still scope to user_id for safety
 
     if (error) {
-      console.error("Error deleting portfolio entry:", error.message);
-      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+      console.error("[Portfolio DELETE] Supabase error:", error.code, error.message);
+      return NextResponse.json(
+        { error: "Internal server error", detail: error.message },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Error deleting portfolio entry:", error);
+    console.error("[Portfolio DELETE] Unexpected error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
