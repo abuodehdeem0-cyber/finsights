@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
 import YahooFinance from "yahoo-finance2";
 
 const yahooFinance = new YahooFinance();

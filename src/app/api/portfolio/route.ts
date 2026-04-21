@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient, createAdminSupabaseClient } from "@/lib/supabase";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 // Helper to detect if Saudi stock and auto-append .SR
 function normalizeSymbol(symbol: string): { symbol: string; currency: string } {
   const clean = symbol.trim().toUpperCase();

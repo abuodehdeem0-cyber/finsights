@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
