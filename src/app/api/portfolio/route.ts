@@ -49,11 +49,16 @@ async function getUserIdFromRequest(request: NextRequest): Promise<string | null
     }
   }
 
-  // Fallback: x-user-id header (only if no valid Bearer token)
+  // Fallback: x-user-id header — ONLY accept valid UUIDs (Supabase Auth IDs)
+  // Reject CUIDs or any other format to avoid DB type errors
   const userId = request.headers.get("x-user-id");
-  if (userId) {
-    console.warn("[Portfolio Auth] ⚠️ Falling back to x-user-id header (less secure):", userId);
+  if (userId && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId)) {
+    console.warn("[Portfolio Auth] ⚠️ Falling back to x-user-id header:", userId);
     return userId;
+  }
+
+  if (userId) {
+    console.error("[Portfolio Auth] ❌ x-user-id is not a valid UUID (got CUID or garbage):", userId, "— session is stale, returning 401");
   }
 
   return null;
